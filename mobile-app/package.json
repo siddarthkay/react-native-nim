@@ -1,0 +1,53 @@
+{
+  "name": "nim-rn-mobile-app",
+  "version": "1.0.0",
+  "description": "React Native app showcasing Nim integration",
+  "main": "index.js",
+  "scripts": {
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "build:nim": "./tools/build-mobile.sh",
+    "generate:bindings": "python3 ./tools/generate_bindings.py",
+    "build:android": "./tools/build-mobile.sh android",
+    "build:ios": "./tools/build-mobile.sh ios",
+    "prebuild": "npm run build:nim"
+  },
+  "dependencies": {
+    "@types/react": "~18.3.12",
+    "expo": "~52.0.47",
+    "react": "18.3.1",
+    "react-native": "0.76.9",
+    "typescript": "^5.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@babel/preset-env": "^7.20.0",
+    "@babel/runtime": "^7.20.0",
+    "@react-native/babel-preset": "^0.76.9",
+    "@react-native/eslint-config": "^0.76.9",
+    "@react-native/metro-config": "^0.76.9",
+    "@react-native/typescript-config": "^0.76.9",
+    "@types/react": "~18.3.12",
+    "@types/react-test-renderer": "^18.0.0",
+    "babel-jest": "^29.6.3",
+    "eslint": "^8.19.0",
+    "jest": "^29.6.3",
+    "prettier": "2.8.8",
+    "react-test-renderer": "18.2.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "react-native",
+    "nim",
+    "mobile",
+    "cross-platform"
+  ],
+  "author": "Nim-RN Team",
+  "license": "MIT"
+}

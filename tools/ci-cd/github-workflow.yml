@@ -1,0 +1,160 @@
+# GitHub Actions workflow for Nim-React Native monorepo
+# Place this file in .github/workflows/ci.yml in your repository
+
+name: Nim-RN Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NIM_VERSION: 2.0.x
+  NODE_VERSION: 18.x
+
+jobs:
+  # Build Nim core and generate bindings
+  build-nim-core:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Nim
+      uses: jiro4989/setup-nim-action@v1
+      with:
+        nim-version: ${{ env.NIM_VERSION }}
+    
+    - name: Verify Nim installation
+      run: nim --version
+    
+    - name: Build and test Nim core
+      run: |
+        cd nim-core
+        nimble test
+    
+    - name: Generate mobile bindings
+      run: |
+        chmod +x tools/build-mobile.sh
+        ./tools/build-mobile.sh generate
+    
+    - name: Upload binding artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: nim-bindings
+        path: bindings/
+        retention-days: 30
+
+  # Test Android build
+  test-android:
+    needs: build-nim-core
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: mobile-app/package-lock.json
+    
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+    
+    - name: Download binding artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: nim-bindings
+        path: bindings/
+    
+    - name: Install mobile app dependencies
+      run: |
+        cd mobile-app
+        npm ci
+    
+    - name: Build Android app
+      run: |
+        cd mobile-app
+        npm run build:android
+        npx react-native build-android --mode=debug
+
+  # Test iOS build (macOS only)
+  test-ios:
+    needs: build-nim-core
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: mobile-app/package-lock.json
+    
+    - name: Setup Nim
+      uses: jiro4989/setup-nim-action@v1
+      with:
+        nim-version: ${{ env.NIM_VERSION }}
+    
+    - name: Download binding artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: nim-bindings
+        path: bindings/
+    
+    - name: Install mobile app dependencies
+      run: |
+        cd mobile-app
+        npm ci
+        cd ios && pod install
+    
+    - name: Build iOS app
+      run: |
+        cd mobile-app
+        npm run build:ios
+        npx react-native build-ios --mode=debug
+
+  # Run tests and quality checks
+  quality-checks:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: mobile-app/package-lock.json
+    
+    - name: Install dependencies
+      run: |
+        cd mobile-app
+        npm ci
+    
+    - name: Run linting
+      run: |
+        cd mobile-app
+        npm run lint
+    
+    - name: Run TypeScript checks
+      run: |
+        cd mobile-app
+        npx tsc --noEmit
+    
+    - name: Run Jest tests
+      run: |
+        cd mobile-app
+        npm test -- --coverage --watchAll=false

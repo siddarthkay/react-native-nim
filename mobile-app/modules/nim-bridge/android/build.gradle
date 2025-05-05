@@ -1,0 +1,71 @@
+buildscript {
+    ext.kotlin_version = '1.9.10'
+    
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+def reactNativeArchitectures() {
+    def value = project.getProperties().get("reactNativeArchitectures")
+    // Only use 64-bit architectures for Nim compatibility
+    return value ? value.split(",") : ["x86_64", "arm64-v8a"]
+}
+
+android {
+    compileSdkVersion 34
+    buildToolsVersion "34.0.0"
+    namespace 'com.nimbridge'
+
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+
+        ndk {
+            abiFilters (*reactNativeArchitectures())
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.22.1"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    lintOptions {
+        disable 'GradleCompatible'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://www.jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.facebook.react:react-native:+'
+}
