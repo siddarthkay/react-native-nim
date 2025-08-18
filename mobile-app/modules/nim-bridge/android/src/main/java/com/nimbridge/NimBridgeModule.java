@@ -44,20 +44,16 @@ public class NimBridgeModule extends ReactContextBaseJavaModule {
     @ReactMethod(isBlockingSynchronousMethod = true)
     public String helloWorld() {
         try {
-            android.util.Log.d("NimBridge", "Calling nativeHelloWorld()");
-            String result = nativeHelloWorld();
-            android.util.Log.d("NimBridge", "nativeHelloWorld() returned: " + result);
-            return result;
+            return nativeHelloWorld();
         } catch (Exception e) {
-            android.util.Log.e("NimBridge", "Error in helloWorld(): " + e.getMessage(), e);
             return "Error: " + e.getMessage();
         }
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public Double addNumbers(double a, double b) {
+    public Double addNumbers(Double a, Double b) {
         try {
-            return (double) nativeAddNumbers((int) a, (int) b);
+            return (double) nativeAddNumbers(a.intValue(), b.intValue());
         } catch (Exception e) {
             return 0.0;
         }
@@ -73,36 +69,36 @@ public class NimBridgeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public Double mobileFibonacci(double n) {
+    public Double mobileFibonacci(Double n) {
         try {
-            return (double) nativeMobileFibonacci((int) n);
+            return (double) nativeMobileFibonacci(n.intValue());
         } catch (Exception e) {
             return 0.0;
         }
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public Double mobileIsPrime(double n) {
+    public Double mobileIsPrime(Double n) {
         try {
-            return (double) nativeMobileIsPrime((int) n);
+            return (double) nativeMobileIsPrime(n.intValue());
         } catch (Exception e) {
             return 0.0;
         }
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public String mobileFactorize(double n) {
+    public String mobileFactorize(Double n) {
         try {
-            return nativeMobileFactorize((int) n);
+            return nativeMobileFactorize(n.intValue());
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public String mobileCreateUser(double id, String name, String email) {
+    public String mobileCreateUser(Double id, String name, String email) {
         try {
-            return nativeMobileCreateUser((int) id, name, email);
+            return nativeMobileCreateUser(id.intValue(), name, email);
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
@@ -125,4 +121,5 @@ public class NimBridgeModule extends ReactContextBaseJavaModule {
             return "Error: " + e.getMessage();
         }
     }
+
 }

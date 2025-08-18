@@ -205,6 +205,212 @@ export interface NimBridge {
     
     return code
 
+def nim_to_java_type(nim_type):
+    """Convert Nim type to Java type"""
+    type_map = {
+        'cstring': 'String',
+        'string': 'String', 
+        'cint': 'Double',
+        'int': 'Double',
+        'bool': 'Double',
+        'float': 'Double',
+    }
+    return type_map.get(nim_type, 'String')
+
+def generate_android_java_module(functions):
+    """Generate Android Java module"""
+    code = """package com.nimbridge;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.module.annotations.ReactModule;
+
+@ReactModule(name = NimBridgeModule.NAME)
+public class NimBridgeModule extends ReactContextBaseJavaModule {
+    public static final String NAME = "NimBridge";
+
+    // Load the native library
+    static {
+        try {
+            System.loadLibrary("nim_functions");
+            android.util.Log.d("NimBridge", "Native library nim_functions loaded successfully");
+        } catch (Exception e) {
+            android.util.Log.e("NimBridge", "Failed to load native library nim_functions: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public NimBridgeModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    // Native method declarations
+"""
+    
+    # Add native method declarations
+    for func in functions:
+        params_str = ', '.join([f"{nim_to_java_type(ptype)} {name}" if ptype not in ['cstring', 'string'] 
+                               else f"String {name}"
+                               for name, ptype in func.params])
+        if func.return_type in ['cstring', 'string']:
+            ret_type = "String"
+        else:
+            ret_type = "int"
+        
+        code += f"    private static native {ret_type} native{func.name[0].upper() + func.name[1:]}({', '.join([f'int {name}' if ptype in ['cint', 'int'] else f'String {name}' for name, ptype in func.params])});\n"
+    
+    code += "\n"
+    
+    # Add React methods
+    for func in functions:
+        # Build method parameters with correct Java types
+        method_params = []
+        for name, ptype in func.params:
+            if ptype in ['cint', 'int']:
+                method_params.append(f"Double {name}")
+            elif ptype in ['cstring', 'string']:
+                method_params.append(f"String {name}")
+            else:
+                method_params.append(f"Double {name}")
+        params_str = ', '.join(method_params)
+        
+        # Determine return type
+        if func.return_type in ['cstring', 'string']:
+            java_ret_type = "String"
+        else:
+            java_ret_type = "Double"
+        
+        code += f"    @ReactMethod(isBlockingSynchronousMethod = true)\n"
+        code += f"    public {java_ret_type} {func.name}({params_str}) {{\n"
+        code += f"        try {{\n"
+        
+        # Build native call with proper type conversions
+        args = []
+        for name, ptype in func.params:
+            if ptype in ['cint', 'int']:
+                args.append(f"{name}.intValue()")
+            else:
+                args.append(name)
+        args_str = ', '.join(args)
+        
+        if func.return_type in ['cstring', 'string']:
+            code += f"            return native{func.name[0].upper() + func.name[1:]}({args_str});\n"
+        else:
+            code += f"            return (double) native{func.name[0].upper() + func.name[1:]}({args_str});\n"
+        
+        code += f"        }} catch (Exception e) {{\n"
+        if func.return_type in ['cstring', 'string']:
+            code += f'            return "Error: " + e.getMessage();\n'
+        else:
+            code += f"            return 0.0;\n"
+        code += f"        }}\n"
+        code += f"    }}\n\n"
+    
+    code += "}\n"
+    
+    return code
+
+def generate_android_jni_cpp(functions):
+    """Generate Android JNI C++ bridge"""
+    code = """#include <jni.h>
+#include <string>
+
+// Import the Nim functions
+extern "C" {
+"""
+    
+    # Add function declarations
+    for func in functions:
+        params_str = ', '.join([f"const char* {name}" if ptype in ['cstring', 'string']
+                               else f"int {name}"
+                               for name, ptype in func.params])
+        if func.return_type in ['cstring', 'string']:
+            ret_type = "const char*"
+        else:
+            ret_type = "int"
+        code += f"    {ret_type} {func.name}({params_str});\n"
+    
+    code += """    void mobileNimInit();
+    void mobileNimShutdown();
+}
+
+// Initialize Nim when the library loads
+static bool nimInitialized = false;
+
+void initializeNim() {
+    if (!nimInitialized) {
+        mobileNimInit();
+        nimInitialized = true;
+    }
+}
+
+"""
+    
+    # Add JNI methods
+    for func in functions:
+        class_name = "com_nimbridge_NimBridgeModule"
+        method_name = f"native{func.name[0].upper() + func.name[1:]}"
+        
+        # Build JNI signature
+        jni_params = []
+        call_params = []
+        for name, ptype in func.params:
+            if ptype in ['cstring', 'string']:
+                jni_params.append(f"jstring {name}")
+                call_params.append(f'env->GetStringUTFChars({name}, 0)')
+            else:
+                jni_params.append(f"jint {name}")
+                call_params.append(name)
+        
+        jni_params_str = ', '.join(['JNIEnv *env', 'jclass clazz'] + jni_params)
+        call_params_str = ', '.join(call_params)
+        
+        if func.return_type in ['cstring', 'string']:
+            ret_type = "jstring"
+            code += f"extern \"C\" JNIEXPORT {ret_type} JNICALL\n"
+            code += f"Java_{class_name}_{method_name}({jni_params_str}) {{\n"
+            code += f"    initializeNim();\n"
+            
+            # Handle string parameters
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    code += f"    const char* {name}Str = env->GetStringUTFChars({name}, 0);\n"
+            
+            # Build actual call with converted params
+            actual_params = []
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    actual_params.append(f"{name}Str")
+                else:
+                    actual_params.append(name)
+            actual_params_str = ', '.join(actual_params)
+            
+            code += f"    const char* result = {func.name}({actual_params_str});\n"
+            
+            # Release string parameters
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    code += f"    env->ReleaseStringUTFChars({name}, {name}Str);\n"
+            
+            code += f"    return env->NewStringUTF(result);\n"
+        else:
+            ret_type = "jint"
+            code += f"extern \"C\" JNIEXPORT {ret_type} JNICALL\n"
+            code += f"Java_{class_name}_{method_name}({jni_params_str}) {{\n"
+            code += f"    initializeNim();\n"
+            code += f"    return {func.name}({call_params_str});\n"
+        
+        code += f"}}\n\n"
+    
+    return code
+
 def main():
     # Find all Nim files with exports
     nim_dir = Path(__file__).parent.parent / "nim"
@@ -243,7 +449,25 @@ def main():
     ts_file.write_text(ts_code)
     print(f"Generated {ts_file}")
     
+    # Android Java module
+    java_code = generate_android_java_module(all_functions)
+    java_file = output_dir / "android" / "src" / "main" / "java" / "com" / "nimbridge" / "NimBridgeModule.java"
+    java_file.parent.mkdir(parents=True, exist_ok=True)
+    java_file.write_text(java_code)
+    print(f"Generated {java_file}")
+    
+    # Android JNI C++ bridge
+    jni_code = generate_android_jni_cpp(all_functions)
+    jni_file = output_dir / "android" / "src" / "main" / "cpp" / "NimBridge.cpp"
+    jni_file.parent.mkdir(parents=True, exist_ok=True)
+    jni_file.write_text(jni_code)
+    print(f"Generated {jni_file}")
+    
     print(f"\n✅ Successfully generated bindings for {len(all_functions)} functions!")
+    print("\nGenerated files:")
+    print("  iOS: nim_functions.h, NimBridge.mm")
+    print("  Android: NimBridgeModule.java, NimBridge.cpp")
+    print("  TypeScript: NimBridge.types.ts")
     print("\nNext steps:")
     print("1. Review the generated files")
     print("2. Run 'pod install' in ios/ directory")
