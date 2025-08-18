@@ -42,6 +42,41 @@ react-native-nim/
 
 ### Prerequisites
 
+#### Option 1: Using Nix (Recommended)
+
+This project includes a Nix flake that provides all required development tools.
+
+```bash
+# Install Nix if you haven't already
+curl -L https://nixos.org/nix/install | sh
+
+# Enter the development environment
+nix develop
+
+```
+
+The Nix environment includes:
+- Node.js 20
+- Python 3
+- Nim compiler 2.2+
+- Git and build tools
+- Android SDK (in default shell)
+- All required dependencies
+
+**Tip:** For automatic environment loading, install [direnv](https://direnv.net/):
+```bash
+# Install direnv
+brew install direnv  # macOS
+# or: nix-env -iA nixpkgs.direnv
+
+# Allow direnv for this project
+direnv allow
+
+# Now the environment loads automatically when you cd into the project!
+```
+
+#### Option 2: Manual Installation
+
 - **Node.js**  18+ 
 - **Nim**      2.0+ (`brew install nim` on macOS)
 - **Xcode**    (for iOS development)
