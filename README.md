@@ -169,7 +169,7 @@ The included demo app showcases:
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   Nim Source    │───▶│  Auto Generator  │───▶│  React Native   │
-│  (Business Logic)│    │   (Python Script)│    │     (UI)        │
+│ (Business Logic)│    │  (Python Script) │    │      (UI)       │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
