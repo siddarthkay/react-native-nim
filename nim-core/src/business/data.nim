@@ -1,7 +1,7 @@
 # Business logic for data processing operations
 # This demonstrates data manipulation and JSON handling
 
-import std/json, std/tables, std/strutils
+import json_serialization, std/strutils
 
 type
   User* = object
@@ -15,24 +15,10 @@ proc createUser*(id: int, name: string, email: string): User =
   return User(id: id, name: name, email: email, active: true)
 
 proc userToJson*(user: User): string =
-  ## Convert user object to JSON string
-  let jsonObj = %*{
-    "id": user.id,
-    "name": user.name,
-    "email": user.email,
-    "active": user.active
-  }
-  return $jsonObj
+  return Json.encode(user)
 
 proc userFromJson*(jsonStr: string): User =
-  ## Parse user object from JSON string
-  let jsonObj = parseJson(jsonStr)
-  return User(
-    id: jsonObj["id"].getInt(),
-    name: jsonObj["name"].getStr(),
-    email: jsonObj["email"].getStr(),
-    active: jsonObj["active"].getBool()
-  )
+  return Json.decode(jsonStr, User)
 
 proc validateEmail*(email: string): bool =
   ## Simple email validation

@@ -8,6 +8,7 @@ srcDir        = "src"
 
 # Dependencies
 requires "nim >= 2.0.0"
+requires "json_serialization"
 
 # Tasks for building mobile bindings
 task android, "Build Android bindings":

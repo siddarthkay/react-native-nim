@@ -1,5 +1,12 @@
 # Nim module with exported functions for React Native
-import strutils, json, strformat
+import strutils, json_serialization, strformat
+
+type
+  User = object
+    id: int
+    name: string
+    email: string
+    active: bool
 
 proc allocCString(s: string): cstring =
   ## Allocates a new C string that persists beyond function scope
@@ -41,8 +48,8 @@ proc mobileFactorize*(n: cint): cstring {.exportc.} =
   return allocCString($factors)
 
 proc mobileCreateUser*(id: cint, name: cstring, email: cstring): cstring {.exportc.} =
-  let userJson = %* {"id": id, "name": $name, "email": $email}
-  return allocCString($userJson)
+  let user = User(id: id.int, name: $name, email: $email, active: true)
+  return allocCString(Json.encode(user))
 
 proc mobileValidateEmail*(email: cstring): cint {.exportc.} =
   let emailStr = $email
