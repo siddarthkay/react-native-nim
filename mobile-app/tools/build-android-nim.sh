@@ -7,6 +7,12 @@ echo "Building Nim code for Android..."
 
 cd ../nim
 
+# Install Nim dependencies if nimble file exists
+if [ -f "nimbridge.nimble" ]; then
+    echo "Installing Nim dependencies..."
+    nimble install -d
+fi
+
 # Clean previous builds
 rm -rf cache_android_*
 mkdir -p cache_android
