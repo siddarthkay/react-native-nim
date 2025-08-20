@@ -21,10 +21,29 @@ target_include_directories(
         PRIVATE
         .
         "../../../../../../nim/cache_android"
+        "../../../../../../nim"
 )
 
-# Compiler flags for Nim
-target_compile_definitions(${PACKAGE_NAME} PRIVATE -D_GNU_SOURCE)
+# Compiler flags for Nim - set NIM_INTBITS based on target architecture
+if(ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "x86_64")
+    target_compile_definitions(${PACKAGE_NAME} PRIVATE 
+        -D_GNU_SOURCE
+        -DNIM_INTBITS=64
+    )
+else()
+    # 32-bit architectures (armeabi-v7a, x86)
+    target_compile_definitions(${PACKAGE_NAME} PRIVATE 
+        -D_GNU_SOURCE
+        -DNIM_INTBITS=32
+    )
+endif()
+
+# Additional compiler flags to handle Nim code properly
+target_compile_options(${PACKAGE_NAME} PRIVATE
+    -Wno-unused-function
+    -Wno-unused-variable
+    -fno-strict-aliasing
+)
 
 # Link libraries
 target_link_libraries(
@@ -32,4 +51,5 @@ target_link_libraries(
         android
         log
         m
+        atomic
 )
