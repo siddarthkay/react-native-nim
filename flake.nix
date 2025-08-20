@@ -52,9 +52,8 @@
 
             # Mobile development tools
             watchman
-            cocoapods
 
-            # Android development (if on Linux/macOS)
+            # Android development (Linux/macOS)
             androidSdk
             jdk17
 
@@ -64,7 +63,8 @@
             curl
             wget
           ] ++ lib.optionals stdenv.isDarwin [
-            # macOS specific tools
+            # macOS specific tools for iOS development
+            cocoapods
             darwin.apple_sdk.frameworks.CoreServices
             darwin.libobjc
           ];
@@ -75,16 +75,23 @@
             export ANDROID_HOME="$ANDROID_SDK_ROOT"
             export PATH="$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/tools/bin:$PATH"
 
-            # Set up iOS environment variables (macOS only)
+            # Platform-specific setup
             if [[ "$OSTYPE" == "darwin"* ]]; then
+              echo "  • macOS: iOS and Android development available"
               echo "  • CocoaPods: $(pod --version 2>/dev/null || echo 'not available')"
+            else
+              echo "  • Linux: Android development only (iOS requires macOS)"
             fi
 
             echo "To get started:"
             echo "  1. cd mobile-app"
             echo "  2. npm install"
             echo "  3. npm run build:nim"
-            echo "  4. npm run ios/android"
+            if [[ "$OSTYPE" == "darwin"* ]]; then
+              echo "  4. npm run ios or npm run android"
+            else
+              echo "  4. npm run android"
+            fi
             echo ""
           '';
 
