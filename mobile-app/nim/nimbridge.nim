@@ -1,5 +1,11 @@
 # Nim module with exported functions for React Native
-import strutils, json
+import strutils, json, strformat
+
+proc allocCString(s: string): cstring =
+  ## Allocates a new C string that persists beyond function scope
+  let cstr = cast[cstring](alloc0(s.len + 1))
+  copyMem(cstr, s.cstring, s.len)
+  return cstr
 
 proc helloWorld*(): cstring {.exportc.} =
   return "Hello from Nim!"
@@ -8,7 +14,8 @@ proc addNumbers*(a: cint, b: cint): cint {.exportc.} =
   return a + b
 
 proc getSystemInfo*(): cstring {.exportc.} =
-  return "Nim 2.0 on iOS"
+  let info = fmt"Nim {NimVersion} on iOS (arm64)"
+  return allocCString(info)
 
 proc mobileFibonacci*(n: cint): cint {.exportc.} =
   if n <= 1: return n
@@ -31,11 +38,11 @@ proc mobileFactorize*(n: cint): cstring {.exportc.} =
     d += 1
   if num > 1:
     factors.add(num)
-  return ($factors).cstring
+  return allocCString($factors)
 
 proc mobileCreateUser*(id: cint, name: cstring, email: cstring): cstring {.exportc.} =
   let userJson = %* {"id": id, "name": $name, "email": $email}
-  return ($userJson).cstring
+  return allocCString($userJson)
 
 proc mobileValidateEmail*(email: cstring): cint {.exportc.} =
   let emailStr = $email
@@ -45,6 +52,11 @@ proc mobileValidateEmail*(email: cstring): cint {.exportc.} =
 
 proc getNimCoreVersion*(): cstring {.exportc.} =
   return "1.0.0"
+
+proc freeString*(s: cstring) {.exportc.} =
+  ## Frees a string allocated by Nim functions
+  if s != nil:
+    dealloc(s)
 
 proc mobileNimInit*() {.exportc.} =
   discard

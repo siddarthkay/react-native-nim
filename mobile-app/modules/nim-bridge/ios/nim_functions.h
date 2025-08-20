@@ -22,4 +22,7 @@ extern "C" {
     NCSTRING mobileCreateUser(int id, NCSTRING name, NCSTRING email);
     int mobileValidateEmail(NCSTRING email);
     NCSTRING getNimCoreVersion();
+    
+    // Memory management
+    void freeString(NCSTRING s);
 }

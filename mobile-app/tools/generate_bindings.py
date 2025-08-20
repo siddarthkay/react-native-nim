@@ -106,6 +106,8 @@ extern "C" {
                                for name, ptype in func.params])
         code += f"    {ret_type} {func.name}({params_str});\n"
     
+    code += "    \n    // Memory management\n"
+    code += "    void freeString(NCSTRING s);\n"
     code += "}\n"
     
     return code
@@ -172,7 +174,13 @@ RCT_EXPORT_MODULE()
                             else name
                             for name, ptype in func.params])
             code += f"    NCSTRING result = {func.name}({args});\n"
-            code += f"    return result ? [NSString stringWithUTF8String:result] : @\"\";\n"
+            # Check if this function allocates memory (not a literal)
+            if func.name in ['mobileFactorize', 'mobileCreateUser', 'getSystemInfo']:
+                code += f"    NSString *objcString = result ? [NSString stringWithUTF8String:result] : @\"\";\n"
+                code += f"    if (result) freeString(result);\n"
+                code += f"    return objcString;\n"
+            else:
+                code += f"    return result ? [NSString stringWithUTF8String:result] : @\"\";\n"
         elif func.return_type in ['cint', 'int', 'bool']:
             args = ', '.join([f"[{name} intValue]" if ptype in ['cint', 'int']
                             else f"(NCSTRING)[{name} UTF8String]" if ptype in ['cstring', 'string']
@@ -339,6 +347,7 @@ extern "C" {
     
     code += """    void mobileNimInit();
     void mobileNimShutdown();
+    void freeString(const char* s);
 }
 
 // Initialize Nim when the library loads
@@ -399,7 +408,13 @@ void initializeNim() {
                 if ptype in ['cstring', 'string']:
                     code += f"    env->ReleaseStringUTFChars({name}, {name}Str);\n"
             
-            code += f"    return env->NewStringUTF(result);\n"
+            # Free allocated strings for functions that allocate memory
+            if func.name in ['mobileFactorize', 'mobileCreateUser', 'getSystemInfo']:
+                code += f"    jstring javaString = env->NewStringUTF(result);\n"
+                code += f"    if (result) freeString(result);\n"
+                code += f"    return javaString;\n"
+            else:
+                code += f"    return env->NewStringUTF(result);\n"
         else:
             ret_type = "jint"
             code += f"extern \"C\" JNIEXPORT {ret_type} JNICALL\n"

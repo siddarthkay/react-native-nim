@@ -45,7 +45,9 @@ RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSNumber *, addNumbers:(nonnull NSNumber *)a
 RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, getSystemInfo)
 {
     NCSTRING result = getSystemInfo();
-    return result ? [NSString stringWithUTF8String:result] : @"";
+    NSString *objcString = result ? [NSString stringWithUTF8String:result] : @"";
+    if (result) freeString(result);
+    return objcString;
 }
 
 RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSNumber *, mobileFibonacci:(nonnull NSNumber *)n)
@@ -63,13 +65,17 @@ RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSNumber *, mobileIsPrime:(nonnull NSNumber 
 RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, mobileFactorize:(nonnull NSNumber *)n)
 {
     NCSTRING result = mobileFactorize([n intValue]);
-    return result ? [NSString stringWithUTF8String:result] : @"";
+    NSString *objcString = result ? [NSString stringWithUTF8String:result] : @"";
+    if (result) freeString(result);
+    return objcString;
 }
 
 RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, mobileCreateUser:(nonnull NSNumber *)id withName:(nonnull NSString *)name withEmail:(nonnull NSString *)email)
 {
     NCSTRING result = mobileCreateUser([id intValue], (NCSTRING)[name UTF8String], (NCSTRING)[email UTF8String]);
-    return result ? [NSString stringWithUTF8String:result] : @"";
+    NSString *objcString = result ? [NSString stringWithUTF8String:result] : @"";
+    if (result) freeString(result);
+    return objcString;
 }
 
 RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSNumber *, mobileValidateEmail:(nonnull NSString *)email)

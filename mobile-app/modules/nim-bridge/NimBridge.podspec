@@ -16,9 +16,15 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "15.1" }
   s.source       = { :git => "https://github.com/example/nim-bridge.git", :tag => "#{s.version}" }
 
-  s.source_files = "ios/**/*.{h,m,mm,cpp}"
+  s.source_files = "ios/**/*.{h,m,mm}"
   s.header_mappings_dir = "ios"
   s.public_header_files = "ios/NimBridge.h"
+  s.vendored_libraries = "ios/libnim_core.a"
+
+  # Add Nim include paths - will be set by build script if needed
+  s.xcconfig = {
+    'OTHER_LDFLAGS' => '-pthread'
+  }
 
   # React Native dependencies
   s.dependency "React-Core"

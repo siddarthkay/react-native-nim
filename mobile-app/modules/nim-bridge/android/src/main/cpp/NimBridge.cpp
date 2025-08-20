@@ -14,6 +14,7 @@ extern "C" {
     const char* getNimCoreVersion();
     void mobileNimInit();
     void mobileNimShutdown();
+    void freeString(const char* s);
 }
 
 // Initialize Nim when the library loads
@@ -43,7 +44,9 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_nimbridge_NimBridgeModule_nativeGetSystemInfo(JNIEnv *env, jclass clazz) {
     initializeNim();
     const char* result = getSystemInfo();
-    return env->NewStringUTF(result);
+    jstring javaString = env->NewStringUTF(result);
+    if (result) freeString(result);
+    return javaString;
 }
 
 extern "C" JNIEXPORT jint JNICALL
@@ -62,7 +65,9 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_nimbridge_NimBridgeModule_nativeMobileFactorize(JNIEnv *env, jclass clazz, jint n) {
     initializeNim();
     const char* result = mobileFactorize(n);
-    return env->NewStringUTF(result);
+    jstring javaString = env->NewStringUTF(result);
+    if (result) freeString(result);
+    return javaString;
 }
 
 extern "C" JNIEXPORT jstring JNICALL
@@ -73,7 +78,9 @@ Java_com_nimbridge_NimBridgeModule_nativeMobileCreateUser(JNIEnv *env, jclass cl
     const char* result = mobileCreateUser(id, nameStr, emailStr);
     env->ReleaseStringUTFChars(name, nameStr);
     env->ReleaseStringUTFChars(email, emailStr);
-    return env->NewStringUTF(result);
+    jstring javaString = env->NewStringUTF(result);
+    if (result) freeString(result);
+    return javaString;
 }
 
 extern "C" JNIEXPORT jint JNICALL
