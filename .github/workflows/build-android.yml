@@ -1,0 +1,133 @@
+name: Build Android
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/build-android.yml'
+      - 'mobile-app/android/**'
+      - 'mobile-app/package.json'
+      - 'mobile-app/yarn.lock'
+      - 'mobile-app/package-lock.json'
+      - 'mobile-app/src/**'
+      - 'mobile-app/*.js'
+      - 'mobile-app/*.ts'
+      - 'mobile-app/*.tsx'
+      - 'mobile-app/*.json'
+  pull_request:
+    branches: [master]
+    paths:
+      - '.github/workflows/build-android.yml'
+      - 'mobile-app/android/**'
+      - 'mobile-app/package.json'
+      - 'mobile-app/yarn.lock'
+      - 'mobile-app/package-lock.json'
+      - 'mobile-app/src/**'
+      - 'mobile-app/*.js'
+      - 'mobile-app/*.ts'
+      - 'mobile-app/*.tsx'
+      - 'mobile-app/*.json'
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: mobile-app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: mobile-app
+        run: npm ci
+
+      - name: Setup Nim
+        run: |
+          # Install build essentials and C compiler
+          sudo apt-get update
+          sudo apt-get install -y build-essential curl
+          
+          # Download and install prebuilt Nim binaries
+          cd /tmp
+          curl -L -o nim.tar.xz "https://nim-lang.org/download/nim-2.0.8-linux_x64.tar.xz"
+          tar -xf nim.tar.xz
+          sudo mv nim-2.0.8 /opt/nim
+          
+          # Add to PATH
+          echo "/opt/nim/bin" >> $GITHUB_PATH
+          echo "$HOME/.nimble/bin" >> $GITHUB_PATH
+          export PATH="/opt/nim/bin:$HOME/.nimble/bin:$PATH"
+          
+          # Verify installation
+          nim --version
+          nimble --version
+
+      - name: Install Nim dependencies
+        working-directory: mobile-app/nim
+        run: |
+          if [ -f "nimbridge.nimble" ]; then
+            nimble install -d
+          fi
+
+      - name: Build Nim code for Android
+        working-directory: mobile-app
+        run: |
+          # Run the build script to compile Nim for Android
+          chmod +x tools/build-mobile.sh
+          ./tools/build-mobile.sh
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+          cache: 'gradle'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Clear Metro cache
+        working-directory: mobile-app
+        run: |
+          npx @react-native-community/cli clean
+          rm -rf node_modules/.cache
+          rm -rf /tmp/metro-* || true
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x mobile-app/android/gradlew
+
+      - name: Build Release APK
+        working-directory: mobile-app/android
+        env:
+          NODE_ENV: production
+          EXPO_USE_FAST_RESOLVER: 1
+        run: ./gradlew assembleRelease --no-daemon --build-cache
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: mobile-app/android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 7
+
+      - name: Stop Gradle daemon
+        if: always()
+        working-directory: mobile-app/android
+        run: ./gradlew --stop

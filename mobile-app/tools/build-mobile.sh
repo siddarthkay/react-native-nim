@@ -14,6 +14,12 @@ echo "Building Nim-React Native Bridge..."
 echo "Compiling Nim code..."
 cd "$NIM_DIR"
 
+# Install Nim dependencies if nimble file exists
+if [ -f "nimbridge.nimble" ]; then
+    echo "Installing Nim dependencies..."
+    nimble install -d
+fi
+
 # Detect platform and build accordingly
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS: Build iOS static library AND Android C files
@@ -31,9 +37,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 else
     # Linux: Generate C files for Android compilation
     echo "Building C files for Android..."
-    echo "  Building for Android (multiple architectures)..."
-    # Generate C files compatible with both 32-bit and 64-bit
-    nim c -c --os:linux --cpu:i386 -d:release --app:staticlib --noMain:on --nimcache:cache_android nimbridge.nim
+    echo "  Building for Android (arm64-v8a)..."
+    # Generate C files for 64-bit ARM Android
+    nim c -c --os:android --cpu:arm64 -d:android -d:release --app:staticlib --noMain:on --nimcache:cache_android nimbridge.nim
     BUILD_TARGET="android"
     CACHE_DIR="cache_android" 
     LIB_NAME="libnim_core.a"
@@ -64,8 +70,12 @@ fi
 
 # Fallback detection methods
 if [ -z "$NIM_LIB_PATH" ] || [ ! -d "$NIM_LIB_PATH" ]; then
+    # Check for prebuilt Nim installation (GitHub Actions)
+    if [ -d "/opt/nim/lib" ]; then
+        NIM_LIB_PATH="/opt/nim/lib"
+        echo "  Found prebuilt Nim lib at: $NIM_LIB_PATH"
     # Try Nix store paths (common when using nix develop)
-    if command -v nim >/dev/null 2>&1; then
+    elif command -v nim >/dev/null 2>&1; then
         NIM_EXECUTABLE=$(which nim)
         if [[ "$NIM_EXECUTABLE" == *"/nix/store/"* ]]; then
             # Extract the nix store path and look for lib directory

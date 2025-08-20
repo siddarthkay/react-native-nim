@@ -1,9 +1,14 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+// Learn more https://docs.expo.io/guides/customizing-metro
+const { getDefaultConfig } = require('expo/metro-config');
 
-/**
- * Metro configuration
- * https://facebook.github.io/metro/docs/configuration
- */
-const config = {};
+/** @type {import('expo/metro-config').MetroConfig} */
+const config = getDefaultConfig(__dirname);
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+// Fix for release build serialization issue
+config.serializer = {
+  ...config.serializer,
+  getModulesRunBeforeMainModule: () => [],
+  getPolyfills: () => [],
+};
+
+module.exports = config;

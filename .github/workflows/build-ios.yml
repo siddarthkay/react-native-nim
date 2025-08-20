@@ -1,0 +1,151 @@
+name: Build iOS
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/build-ios.yml'
+      - 'mobile-app/ios/**'
+      - 'mobile-app/package.json'
+      - 'mobile-app/yarn.lock'
+      - 'mobile-app/package-lock.json'
+      - 'mobile-app/src/**'
+      - 'mobile-app/*.js'
+      - 'mobile-app/*.ts'
+      - 'mobile-app/*.tsx'
+      - 'mobile-app/*.json'
+  pull_request:
+    branches: [master]
+    paths:
+      - '.github/workflows/build-ios.yml'
+      - 'mobile-app/ios/**'
+      - 'mobile-app/package.json'
+      - 'mobile-app/yarn.lock'
+      - 'mobile-app/package-lock.json'
+      - 'mobile-app/src/**'
+      - 'mobile-app/*.js'
+      - 'mobile-app/*.ts'
+      - 'mobile-app/*.tsx'
+      - 'mobile-app/*.json'
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    name: Build iOS IPA
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: mobile-app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: mobile-app
+        run: npm ci
+
+      - name: Setup Nim
+        run: |
+          # Install Nim
+          brew install nim
+          echo "$HOME/.nimble/bin" >> $GITHUB_PATH
+          
+          # Verify installation
+          nim --version
+          nimble --version
+
+      - name: Install Nim dependencies
+        working-directory: mobile-app/nim
+        run: |
+          if [ -f "nimbridge.nimble" ]; then
+            nimble install -d
+          fi
+
+      - name: Build Nim code for iOS
+        working-directory: mobile-app
+        run: |
+          # Run the build script to compile Nim for iOS
+          chmod +x tools/build-mobile.sh
+          ./tools/build-mobile.sh
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: true
+          working-directory: mobile-app/ios
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: mobile-app/ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install CocoaPods dependencies
+        working-directory: mobile-app/ios
+        run: |
+          pod install --repo-update || pod install
+
+      - name: Select Xcode 16.4
+        run: sudo xcode-select -s "/Applications/Xcode_16.4.app/Contents/Developer"
+
+      - name: Install xcbeautify
+        run: brew install xcbeautify
+
+      - name: Clear Metro and Xcode caches
+        working-directory: mobile-app
+        run: |
+          npx @react-native-community/cli clean
+          rm -rf node_modules/.cache
+          rm -rf /tmp/metro-* || true
+          rm -rf ios/build || true
+
+      - name: Generate ReactCodegen files
+        working-directory: mobile-app/ios
+        run: |
+          # Generate ReactCodegen files (this will fail but creates the required files)
+          xcodebuild -workspace nimrnmobileapp.xcworkspace \
+            -scheme ReactCodegen \
+            -sdk iphonesimulator \
+            -configuration Release \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES || echo "ReactCodegen files generated (expected failure)"
+
+      - name: Build iOS Simulator App
+        working-directory: mobile-app/ios
+        run: |
+          set -o pipefail
+          xcodebuild -workspace nimrnmobileapp.xcworkspace \
+            -scheme nimrnmobileapp \
+            -sdk iphonesimulator \
+            -configuration Release \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
+            | xcbeautify
+
+      - name: Prepare iOS app for upload
+        working-directory: mobile-app/ios/build/Build/Products/Release-iphonesimulator
+        run: |
+          cp -r nimrnmobileapp.app nim-rn-ios.app
+
+      - name: Upload Simulator Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: nim-rn-ios.app
+          path: mobile-app/ios/build/Build/Products/Release-iphonesimulator/nim-rn-ios.app
+          retention-days: 60
