@@ -4,7 +4,6 @@
     "slug": "nim-rn-mobile-app",
     "version": "1.0.0",
     "description": "React Native app showcasing Nim integration",
-    "sdkVersion": "52.0.0",
     "platforms": [
       "ios",
       "android"
