@@ -16,7 +16,7 @@ extern "C" {
     NCSTRING helloWorld();
     int addNumbers(int a, int b);
     NCSTRING getSystemInfo();
-    int mobileFibonacci(int n);
+    long long mobileFibonacci(int n);
     int mobileIsPrime(int n);
     NCSTRING mobileFactorize(int n);
     NCSTRING mobileCreateUser(int id, NCSTRING name, NCSTRING email);

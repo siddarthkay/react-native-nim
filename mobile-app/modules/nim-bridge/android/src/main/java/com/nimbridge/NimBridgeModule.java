@@ -34,7 +34,7 @@ public class NimBridgeModule extends ReactContextBaseJavaModule {
     private static native String nativeHelloWorld();
     private static native int nativeAddNumbers(int a, int b);
     private static native String nativeGetSystemInfo();
-    private static native int nativeMobileFibonacci(int n);
+    private static native long nativeMobileFibonacci(int n);
     private static native int nativeMobileIsPrime(int n);
     private static native String nativeMobileFactorize(int n);
     private static native String nativeMobileCreateUser(int id, String name, String email);

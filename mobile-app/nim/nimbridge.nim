@@ -24,9 +24,15 @@ proc getSystemInfo*(): cstring {.exportc.} =
   let info = fmt"Nim {NimVersion} on iOS (arm64)"
   return allocCString(info)
 
-proc mobileFibonacci*(n: cint): cint {.exportc.} =
-  if n <= 1: return n
-  return mobileFibonacci(n - 1) + mobileFibonacci(n - 2)
+proc mobileFibonacci*(n: cint): int64 {.exportc.} =
+  if n <= 1: return n.int64
+  var a: int64 = 0
+  var b: int64 = 1
+  for i in 2..n:
+    let temp = a + b
+    a = b
+    b = temp
+  return b
 
 proc mobileIsPrime*(n: cint): cint {.exportc.} =
   if n <= 1: return 0

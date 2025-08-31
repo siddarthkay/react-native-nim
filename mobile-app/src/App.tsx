@@ -49,6 +49,15 @@ const App: React.FC = () => {
     try {
       const num = parseInt(mathInput) || 10;
       
+      // Check for Fibonacci overflow
+      if (num > 78) {
+        Alert.alert(
+          'MATH_PROCESSOR LIMIT',
+          'Fibonacci calculation exceeds JavaScript MAX_SAFE_INTEGER for values > 78. Results will be inaccurate.',
+          [{ text: 'OK' }]
+        );
+      }
+      
       // Test addition
       const sum = NimCore.addNumbers(num, 5);
       addResult(`${num} + 5 = ${sum}`);

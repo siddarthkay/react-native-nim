@@ -52,7 +52,7 @@ RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, getSystemInfo)
 
 RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSNumber *, mobileFibonacci:(nonnull NSNumber *)n)
 {
-    int result = mobileFibonacci([n intValue]);
+    long long result = mobileFibonacci([n intValue]);
     return @(result);
 }
 

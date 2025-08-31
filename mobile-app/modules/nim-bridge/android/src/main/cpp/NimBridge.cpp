@@ -6,7 +6,7 @@ extern "C" {
     const char* helloWorld();
     int addNumbers(int a, int b);
     const char* getSystemInfo();
-    int mobileFibonacci(int n);
+    long long mobileFibonacci(int n);
     int mobileIsPrime(int n);
     const char* mobileFactorize(int n);
     const char* mobileCreateUser(int id, const char* name, const char* email);
@@ -49,10 +49,10 @@ Java_com_nimbridge_NimBridgeModule_nativeGetSystemInfo(JNIEnv *env, jclass clazz
     return javaString;
 }
 
-extern "C" JNIEXPORT jint JNICALL
+extern "C" JNIEXPORT jlong JNICALL
 Java_com_nimbridge_NimBridgeModule_nativeMobileFibonacci(JNIEnv *env, jclass clazz, jint n) {
     initializeNim();
-    return mobileFibonacci(n);
+    return (jlong)mobileFibonacci(n);
 }
 
 extern "C" JNIEXPORT jint JNICALL

@@ -50,6 +50,7 @@ def nim_to_cpp_type(nim_type):
         'cstring': 'NCSTRING',
         'cint': 'int',
         'int': 'int',
+        'int64': 'long long',
         'string': 'NCSTRING',
         'bool': 'int',
         'float': 'double',
@@ -63,6 +64,7 @@ def nim_to_objc_type(nim_type):
         'string': 'NSString *',
         'cint': 'NSNumber *',
         'int': 'NSNumber *',
+        'int64': 'NSNumber *',
         'bool': 'NSNumber *',
         'float': 'NSNumber *',
     }
@@ -75,6 +77,7 @@ def nim_to_ts_type(nim_type):
         'string': 'string',
         'cint': 'number',
         'int': 'number',
+        'int64': 'number',
         'bool': 'boolean',
         'float': 'number',
     }
@@ -181,6 +184,13 @@ RCT_EXPORT_MODULE()
                 code += f"    return objcString;\n"
             else:
                 code += f"    return result ? [NSString stringWithUTF8String:result] : @\"\";\n"
+        elif func.return_type == 'int64':
+            args = ', '.join([f"[{name} intValue]" if ptype in ['cint', 'int']
+                            else f"(NCSTRING)[{name} UTF8String]" if ptype in ['cstring', 'string']
+                            else name
+                            for name, ptype in func.params])
+            code += f"    long long result = {func.name}({args});\n"
+            code += f"    return @(result);\n"
         elif func.return_type in ['cint', 'int', 'bool']:
             args = ', '.join([f"[{name} intValue]" if ptype in ['cint', 'int']
                             else f"(NCSTRING)[{name} UTF8String]" if ptype in ['cstring', 'string']
@@ -220,6 +230,7 @@ def nim_to_java_type(nim_type):
         'string': 'String', 
         'cint': 'Double',
         'int': 'Double',
+        'int64': 'Double',
         'bool': 'Double',
         'float': 'Double',
     }
@@ -269,6 +280,8 @@ public class NimBridgeModule extends ReactContextBaseJavaModule {
                                for name, ptype in func.params])
         if func.return_type in ['cstring', 'string']:
             ret_type = "String"
+        elif func.return_type == 'int64':
+            ret_type = "long"
         else:
             ret_type = "int"
         
@@ -341,6 +354,8 @@ extern "C" {
                                for name, ptype in func.params])
         if func.return_type in ['cstring', 'string']:
             ret_type = "const char*"
+        elif func.return_type == 'int64':
+            ret_type = "long long"
         else:
             ret_type = "int"
         code += f"    {ret_type} {func.name}({params_str});\n"
@@ -415,6 +430,12 @@ void initializeNim() {
                 code += f"    return javaString;\n"
             else:
                 code += f"    return env->NewStringUTF(result);\n"
+        elif func.return_type == 'int64':
+            ret_type = "jlong"
+            code += f"extern \"C\" JNIEXPORT {ret_type} JNICALL\n"
+            code += f"Java_{class_name}_{method_name}({jni_params_str}) {{\n"
+            code += f"    initializeNim();\n"
+            code += f"    return (jlong){func.name}({call_params_str});\n"
         else:
             ret_type = "jint"
             code += f"extern \"C\" JNIEXPORT {ret_type} JNICALL\n"
