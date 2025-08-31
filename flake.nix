@@ -33,10 +33,8 @@
       {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            # Node.js and package managers
+            # Node.js (yarn managed by project's corepack)
             nodejs_20
-            nodePackages.npm
-            nodePackages.yarn
 
             # Python for generate_bindings.py
             python3
@@ -70,6 +68,9 @@
           ];
 
           shellHook = ''
+            # Use system's existing Yarn v4 setup via corepack
+            export COREPACK_ENABLE_STRICT=0
+            
             # Create writable Android SDK directory
             export ANDROID_SDK_ROOT="$HOME/.android-sdk-nix"
             export ANDROID_HOME="$ANDROID_SDK_ROOT"
@@ -113,15 +114,22 @@
             
             echo "  • Android SDK: $ANDROID_SDK_ROOT"
             echo "  • Java: $(java -version 2>&1 | head -1)"
+            
+            # Check for project's Yarn version
+            if [ -f "mobile-app/.yarnrc.yml" ]; then
+              echo "  • Yarn: v4 (via Corepack)"
+            else
+              echo "  • Yarn: $(yarn --version 2>/dev/null || echo 'not available')"
+            fi
 
             echo "To get started:"
             echo "  1. cd mobile-app"
-            echo "  2. npm install"
-            echo "  3. npm run build:nim"
+            echo "  2. yarn install"
+            echo "  3. yarn build:nim"
             if [[ "$OSTYPE" == "darwin"* ]]; then
-              echo "  4. npm run ios or npm run android"
+              echo "  4. yarn ios or yarn android"
             else
-              echo "  4. npm run android"
+              echo "  4. yarn android"
             fi
             echo ""
           '';

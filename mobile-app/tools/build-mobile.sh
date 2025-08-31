@@ -158,7 +158,7 @@ if [ "$SKIP_COMPILATION" = true ]; then
     echo "  - $BRIDGE_DIR/src/NimBridge.types.ts (TypeScript interface)"
     echo ""
     echo "Next steps:"
-    echo "  1. Run 'npm run android'"
+    echo "  1. Run 'yarn android'"
     echo "  2. The Nim code will be compiled during the Android build process"
     exit 0
 fi
@@ -277,8 +277,8 @@ echo ""
 echo ""
 echo "Next steps:"
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "  1. Run 'npm run ios' or 'npm run android'"
+    echo "  1. Run 'yarn ios' or 'yarn android'"
 else
-    echo "  1. Run 'npm run android'"
+    echo "  1. Run 'yarn android'"
 fi
 echo "  2. The static library will be automatically linked"

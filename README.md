@@ -93,19 +93,19 @@ cd react-native-nim
 cd mobile-app
 
 # Install dependencies
-npm install
+yarn install
 
 # Install iOS dependencies
 cd ios && pod install && cd ..
 
 # Build Nim bindings
-npm run build:nim
+yarn build:nim
 
 # Run on iOS
-npm run ios
+yarn ios
 
 # Run on Android
-npm run android
+yarn android
 ```
 
 ## How It Works
@@ -129,7 +129,7 @@ proc validateCreditCard*(cardNumber: cstring): cint {.exportc.} =
 
 ```bash
 cd mobile-app
-npm run build:nim
+yarn build:nim
 ```
 
 This **automatically generates**:
@@ -201,14 +201,14 @@ def nim_to_ts_type(nim_type):
 # Clean and rebuild
 cd mobile-app
 rm -rf nim/cache
-npm run build:nim
+yarn build:nim
 cd ios && pod install && cd ..
 ```
 
 **Metro bundler errors**
 ```bash
 # Reset Metro cache
-npx react-native start --reset-cache
+yarn react-native start --reset-cache
 ```
 
 **Nim compilation errors**

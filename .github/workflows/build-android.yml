@@ -8,7 +8,6 @@ on:
       - 'mobile-app/android/**'
       - 'mobile-app/package.json'
       - 'mobile-app/yarn.lock'
-      - 'mobile-app/package-lock.json'
       - 'mobile-app/src/**'
       - 'mobile-app/*.js'
       - 'mobile-app/*.ts'
@@ -21,7 +20,6 @@ on:
       - 'mobile-app/android/**'
       - 'mobile-app/package.json'
       - 'mobile-app/yarn.lock'
-      - 'mobile-app/package-lock.json'
       - 'mobile-app/src/**'
       - 'mobile-app/*.js'
       - 'mobile-app/*.ts'
@@ -44,12 +42,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: mobile-app/package-lock.json
+
+      - name: Enable Corepack for Yarn
+        run: |
+          corepack enable
+          cd mobile-app
+          corepack use yarn@4.9.4
 
       - name: Install dependencies
         working-directory: mobile-app
-        run: npm ci
+        run: yarn install --immutable
 
       - name: Setup Nim
         run: |
@@ -106,8 +108,8 @@ jobs:
       - name: Clear Metro cache
         working-directory: mobile-app
         run: |
-          npx @react-native-community/cli clean
-          rm -rf node_modules/.cache
+          echo "" | yarn react-native clean
+          rm -rf node_modules/.cache || true
           rm -rf /tmp/metro-* || true
 
       - name: Grant execute permission for gradlew
