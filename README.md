@@ -4,9 +4,9 @@
 
 <div align="center">
 
-| iOS | Android |
-|-----|---------|
-| <img src="assets/ios-screenshot.png" width="300" alt="iOS Screenshot" /> | <img src="assets/android-screenshot.png" width="300" alt="Android Screenshot" /> |
+| iOS |                                                                                        | Android |
+|-----|----------------------------------------------------------------------------------------|---------|
+| <img src="assets/ios-screenshot.png" width="300" alt="iOS Screenshot" /> | <img src="assets/react-native-nim-logo.png" width="200" alt="React Native Nim Logo" /> | <img src="assets/android-screenshot.png" width="300" alt="Android Screenshot" /> |
 
 </div>
 

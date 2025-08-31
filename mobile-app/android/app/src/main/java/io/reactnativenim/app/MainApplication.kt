@@ -1,4 +1,4 @@
-package com.example.nimrnmobileapp
+package io.reactnativenim.app
 
 import android.app.Application
 import android.content.res.Configuration

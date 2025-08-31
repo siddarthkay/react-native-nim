@@ -10,10 +10,10 @@
       "android"
     ],
     "ios": {
-      "bundleIdentifier": "com.example.nimrnmobileapp"
+      "bundleIdentifier": "io.reactnativenim.app"
     },
     "android": {
-      "package": "com.example.nimrnmobileapp"
+      "package": "io.reactnativenim.app"
     }
   }
 }

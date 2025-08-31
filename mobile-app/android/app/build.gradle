@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.example.nimrnmobileapp'
+    namespace 'io.reactnativenim.app'
     defaultConfig {
-        applicationId 'com.example.nimrnmobileapp'
+        applicationId 'io.reactnativenim.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
