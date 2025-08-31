@@ -126,11 +126,11 @@ const App: React.FC = () => {
           <Text style={styles.sectionTitle}>[ CORE API TESTS ]</Text>
           
           <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={testHelloWorld}>
-            <Text style={styles.buttonText}>> EXEC HELLO_WORLD</Text>
+            <Text style={styles.buttonText}>&gt; EXEC HELLO_WORLD</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={[styles.button, styles.secondaryButton]} onPress={testSystemInfo}>
-            <Text style={styles.buttonText}>> QUERY SYSTEM_INFO</Text>
+            <Text style={styles.buttonText}>&gt; QUERY SYSTEM_INFO</Text>
           </TouchableOpacity>
         </View>
 
@@ -148,7 +148,7 @@ const App: React.FC = () => {
           />
           
           <TouchableOpacity style={[styles.button, styles.accentButton]} onPress={testMathOperations}>
-            <Text style={styles.buttonText}>> RUN MATH_SUITE</Text>
+            <Text style={styles.buttonText}>&gt; RUN MATH_SUITE</Text>
           </TouchableOpacity>
         </View>
 
@@ -166,7 +166,7 @@ const App: React.FC = () => {
           />
           
           <TouchableOpacity style={[styles.button, styles.successButton]} onPress={testDataOperations}>
-            <Text style={styles.buttonText}>> PROCESS DATA_VALIDATION</Text>
+            <Text style={styles.buttonText}>&gt; PROCESS DATA_VALIDATION</Text>
           </TouchableOpacity>
         </View>
 

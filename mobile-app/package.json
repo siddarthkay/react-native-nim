@@ -2,7 +2,7 @@
   "name": "nim-rn-mobile-app",
   "version": "1.0.0",
   "description": "React Native app showcasing Nim integration",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "android": "expo run:android",
     "ios": "expo run:ios",
