@@ -243,6 +243,20 @@ extern "C" {
         
         return code
 
+class ObjcHeaderGenerator(CodeGenerator):
+    """Generates Objective-C header file."""
+    
+    def generate(self) -> str:
+        """Generate Objective-C header file."""
+        code = self._generate_header("Objective-C++ bridge header")
+        code += """#import <React/RCTBridgeModule.h>
+
+@interface NimBridge : NSObject <RCTBridgeModule>
+
+@end
+"""
+        return code
+
 class ObjcBridgeGenerator(CodeGenerator):
     """Generates Objective-C++ bridge code."""
     
@@ -711,6 +725,8 @@ class BindingGenerator:
             generators.update({
                 "C++ wrapper": (CppWrapperGenerator(self.functions), 
                                self.output_dir / "ios" / f"{self.config.library_name}.h"),
+                "Objective-C++ header": (ObjcHeaderGenerator(self.functions), 
+                                        self.output_dir / "ios" / f"{self.config.module_name}.h"),
                 "Objective-C++ bridge": (ObjcBridgeGenerator(self.functions), 
                                         self.output_dir / "ios" / f"{self.config.module_name}.mm"),
             })
@@ -745,8 +761,8 @@ class BindingGenerator:
         """Print generation summary."""
         print(f"\n✅ Successfully generated bindings for {len(self.functions)} functions!")
         print("\nGenerated files:")
-        print("  iOS: nim_functions.h, NimBridge.mm")
-        print("  Android: NimBridgeModule.kt, NimBridge.cpp")
+        print("  iOS: nim_functions.h, NimBridge.h, NimBridge.mm")
+        print("  Android: NimBridgeModule.kt, NimBridgePackage.kt, NimBridge.cpp")
         print("  TypeScript: NimBridge.types.ts")
         print("\nNext steps:")
         print("1. Review the generated files")
