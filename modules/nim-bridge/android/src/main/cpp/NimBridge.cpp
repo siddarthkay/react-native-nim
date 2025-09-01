@@ -83,11 +83,11 @@ Java_com_nimbridge_NimBridgeModule_nativeMobileCreateUser(JNIEnv *env, jclass cl
     const char* nameStr = env->GetStringUTFChars(name, 0);
     const char* emailStr = env->GetStringUTFChars(email, 0);
     const char* result = mobileCreateUser(id, nameStr, emailStr);
-    env->ReleaseStringUTFChars(name, nameStr);
-    env->ReleaseStringUTFChars(email, emailStr);
     jstring javaString = env->NewStringUTF(result);
     if (result) freeString(result);
     return javaString;
+    env->ReleaseStringUTFChars(name, nameStr);
+    env->ReleaseStringUTFChars(email, emailStr);
 }
 
 extern "C" JNIEXPORT jint JNICALL
@@ -95,8 +95,8 @@ Java_com_nimbridge_NimBridgeModule_nativeMobileValidateEmail(JNIEnv *env, jclass
     initializeNim();
     const char* emailStr = env->GetStringUTFChars(email, 0);
     int result = mobileValidateEmail(emailStr);
-    env->ReleaseStringUTFChars(email, emailStr);
     return result;
+    env->ReleaseStringUTFChars(email, emailStr);
 }
 
 extern "C" JNIEXPORT jstring JNICALL

@@ -1,0 +1,10 @@
+{
+  "nim_dir": "nim",
+  "output_dir": "../modules/nim-bridge",
+  "package_name": "com.nimbridge",
+  "module_name": "NimBridge",
+  "library_name": "nim_functions",
+  "generate_ios": true,
+  "generate_android": true,
+  "generate_typescript": true
+}
