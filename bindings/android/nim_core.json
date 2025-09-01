@@ -1,0 +1,178 @@
+{
+  "cacheVersion": "D20240927T193831",
+  "outputFile": "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/nim_core",
+  "outputLastModificationTime": "",
+  "compile": [
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sexceptions.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sexceptions.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sexceptions.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sprivate@sdigitsutils.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sprivate@sdigitsutils.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sprivate@sdigitsutils.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sassertions.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sassertions.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sassertions.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sdollars.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sdollars.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sdollars.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@stypedthreads.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@stypedthreads.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@stypedthreads.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@ssyncio.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@ssyncio.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@ssyncio.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sunicode.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sunicode.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sunicode.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smath.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smath.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smath.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@salgorithm.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@salgorithm.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@salgorithm.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrutils.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrutils.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrutils.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrformat.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrformat.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrformat.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mapi@score.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mapi@score.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mapi@score.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@smath.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@smath.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@smath.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@soserrors.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@soserrors.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@soserrors.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@stimes.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@stimes.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@stimes.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@senvvars.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@senvvars.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@senvvars.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smemfiles.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smemfiles.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smemfiles.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sptrops.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sptrops.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sptrops.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@scollections@sdeques.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@scollections@sdeques.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@scollections@sdeques.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sbuffers.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sbuffers.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sbuffers.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sinputs.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sinputs.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sinputs.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sstrings.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sstrings.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sstrings.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@soutputs.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@soutputs.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@soutputs.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sserialization-0.2.2-8cd7d369b8e128106c1978b5bae42fe56689d880@sserialization@serrors.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sserialization-0.2.2-8cd7d369b8e128106c1978b5bae42fe56689d880@sserialization@serrors.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sserialization-0.2.2-8cd7d369b8e128106c1978b5bae42fe56689d880@sserialization@serrors.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@stypes.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@stypes.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@stypes.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@sreader_desc.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@sreader_desc.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@sreader_desc.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@swriter.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@swriter.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@swriter.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@sdata.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@sdata.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@sdata.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmobile@sbindings.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmobile@sbindings.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmobile@sbindings.nim.cpp"
+    ],
+    [
+      "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmain.nim.cpp",
+      "clang++ -c -std=gnu++17 -funsigned-char  -pthread -fPIC  -O3 -fno-ident  -fPIC  -I/opt/homebrew/Cellar/nim/2.2.0/nim/lib -I/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/src -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmain.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmain.nim.cpp"
+    ]
+  ],
+  "link": [
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sexceptions.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sprivate@sdigitsutils.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sassertions.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sdollars.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@stypedthreads.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@ssyncio.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sunicode.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smath.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@salgorithm.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrutils.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrformat.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mapi@score.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@smath.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@soserrors.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@stimes.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@senvvars.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smemfiles.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sptrops.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@scollections@sdeques.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sbuffers.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sinputs.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sstrings.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@soutputs.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sserialization-0.2.2-8cd7d369b8e128106c1978b5bae42fe56689d880@sserialization@serrors.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@stypes.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@sreader_desc.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@swriter.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@sdata.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmobile@sbindings.nim.cpp.o",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmain.nim.cpp.o"
+  ],
+  "linkcmd": "clang++   -shared -o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/nim_core /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sexceptions.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sprivate@sdigitsutils.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@sassertions.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem@sdollars.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@stypedthreads.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@ssyncio.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@ssystem.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sunicode.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smath.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@salgorithm.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrutils.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@sstrformat.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mapi@score.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@smath.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@soserrors.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@stimes.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@sstd@senvvars.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@smemfiles.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sptrops.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s..@s..@sopt@shomebrew@sCellar@snim@s2.2.0@snim@slib@spure@scollections@sdeques.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sbuffers.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@sinputs.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sstew-0.4.1-996d9c058ee078d0209a5f539424a0235683918c@sstew@sstrings.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sfaststreams-0.3.0-537acd856f131772e5553318f53bf1263935034a@sfaststreams@soutputs.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sserialization-0.2.2-8cd7d369b8e128106c1978b5bae42fe56689d880@sserialization@serrors.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@stypes.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@sreader_desc.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@m..@s..@s..@s..@s..@s.nimble@spkgs2@sjson_serialization-0.4.2-2b26a9e0fc79638dbb9272fb4ab5a1d79264f938@sjson_serialization@swriter.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mbusiness@sdata.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmobile@sbindings.nim.cpp.o /Users/siddarthkumar/code/siddarthkay/react-native-nim/bindings/android/@mmain.nim.cpp.o  -pthread -pthread -lm -lm  -fPIC  -ldl",
+  "extraCmds": [],
+  "configFiles": [
+    "/opt/homebrew/Cellar/nim/2.2.0/nim/config/nim.cfg",
+    "/opt/homebrew/Cellar/nim/2.2.0/nim/config/config.nims",
+    "/Users/siddarthkumar/code/siddarthkay/react-native-nim/nim-core/nim.cfg"
+  ],
+  "stdinInput": false,
+  "projectIsCmd": false,
+  "cmdInput": "",
+  "currentDir": "/Users/siddarthkumar/code/siddarthkay/react-native-nim",
+  "cmdline": "",
+  "depfiles": [],
+  "nimexe": ""
+}

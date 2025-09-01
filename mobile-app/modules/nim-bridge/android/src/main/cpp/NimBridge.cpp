@@ -40,7 +40,8 @@ Java_com_nimbridge_NimBridgeModule_nativeHelloWorld(JNIEnv *env, jclass clazz) {
 extern "C" JNIEXPORT jint JNICALL
 Java_com_nimbridge_NimBridgeModule_nativeAddNumbers(JNIEnv *env, jclass clazz, jint a, jint b) {
     initializeNim();
-    return addNumbers(a, b);
+    int result = addNumbers(a, b);
+    return result;
 }
 
 extern "C" JNIEXPORT jstring JNICALL
@@ -55,13 +56,15 @@ Java_com_nimbridge_NimBridgeModule_nativeGetSystemInfo(JNIEnv *env, jclass clazz
 extern "C" JNIEXPORT jlong JNICALL
 Java_com_nimbridge_NimBridgeModule_nativeMobileFibonacci(JNIEnv *env, jclass clazz, jint n) {
     initializeNim();
-    return (jlong)mobileFibonacci(n);
+    long long result = mobileFibonacci(n);
+    return (jlong)result;
 }
 
 extern "C" JNIEXPORT jint JNICALL
 Java_com_nimbridge_NimBridgeModule_nativeMobileIsPrime(JNIEnv *env, jclass clazz, jint n) {
     initializeNim();
-    return mobileIsPrime(n);
+    int result = mobileIsPrime(n);
+    return result;
 }
 
 extern "C" JNIEXPORT jstring JNICALL
@@ -89,7 +92,10 @@ Java_com_nimbridge_NimBridgeModule_nativeMobileCreateUser(JNIEnv *env, jclass cl
 extern "C" JNIEXPORT jint JNICALL
 Java_com_nimbridge_NimBridgeModule_nativeMobileValidateEmail(JNIEnv *env, jclass clazz, jstring email) {
     initializeNim();
-    return mobileValidateEmail(env->GetStringUTFChars(email, 0));
+    const char* emailStr = env->GetStringUTFChars(email, 0);
+    int result = mobileValidateEmail(emailStr);
+    env->ReleaseStringUTFChars(email, emailStr);
+    return result;
 }
 
 extern "C" JNIEXPORT jstring JNICALL

@@ -10,10 +10,11 @@ import sys
 from pathlib import Path
 
 class NimFunction:
-    def __init__(self, name, return_type, params):
+    def __init__(self, name, return_type, params, memory_type=None):
         self.name = name
         self.return_type = return_type
         self.params = params  # List of (name, type) tuples
+        self.memory_type = memory_type  # 'literal' or 'allocated' for string returns
 
 def parse_nim_exports(nim_file):
     """Parse Nim file and extract exported functions"""
@@ -22,14 +23,45 @@ def parse_nim_exports(nim_file):
     with open(nim_file, 'r') as f:
         content = f.read()
     
-    # Regex to match exported Nim procs
-    # proc functionName*(param: type, param2: type2): returnType {.exportc.}
+    # Regex to match exported Nim procs with optional doc comments
+    # Captures: proc name, parameters, return type, and the full proc definition
     pattern = r'proc\s+(\w+)\*\s*\((.*?)\)\s*:\s*(\w+)\s*{[^}]*exportc[^}]*}'
     
     for match in re.finditer(pattern, content, re.MULTILINE | re.DOTALL):
         func_name = match.group(1)
         params_str = match.group(2)
         return_type = match.group(3)
+        
+        # Check for memory annotation in doc comment
+        memory_type = None
+        if return_type in ['cstring', 'string']:
+            # Look for doc comment before the function
+            func_start_pos = match.start()
+            # Look backwards for ## comments
+            lines_before = content[:func_start_pos].split('\n')
+            # Check the last few lines before the function for annotations
+            for i in range(len(lines_before) - 1, max(0, len(lines_before) - 5), -1):
+                line = lines_before[i].strip()
+                if '@literal' in line:
+                    memory_type = 'literal'
+                    break
+                elif '@allocated' in line:
+                    memory_type = 'allocated'
+                    break
+                elif line and not line.startswith('##'):
+                    # Stop looking if we hit non-comment content
+                    break
+            
+            # If no annotation found, detect from implementation
+            if memory_type is None:
+                func_start = match.end()
+                # Find the function body (simple heuristic - look for next proc or end of file)
+                next_proc = content.find('\nproc ', func_start)
+                func_body = content[func_start:next_proc if next_proc != -1 else len(content)]
+                if 'allocCString' in func_body:
+                    memory_type = 'allocated'
+                else:
+                    memory_type = 'literal'
         
         # Parse parameters
         params = []
@@ -40,7 +72,7 @@ def parse_nim_exports(nim_file):
                     name, ptype = param.split(':', 1)
                     params.append((name.strip(), ptype.strip()))
         
-        functions.append(NimFunction(func_name, return_type, params))
+        functions.append(NimFunction(func_name, return_type, params, memory_type))
     
     return functions
 
@@ -177,12 +209,12 @@ RCT_EXPORT_MODULE()
                             else name
                             for name, ptype in func.params])
             code += f"    NCSTRING result = {func.name}({args});\n"
-            # Check if this function allocates memory (not a literal)
-            if func.name in ['mobileFactorize', 'mobileCreateUser', 'getSystemInfo']:
+            # Check memory type from parsed annotations
+            if func.memory_type == 'allocated':
                 code += f"    NSString *objcString = result ? [NSString stringWithUTF8String:result] : @\"\";\n"
                 code += f"    if (result) freeString(result);\n"
                 code += f"    return objcString;\n"
-            else:
+            else:  # literal or unknown (default to literal for safety)
                 code += f"    return result ? [NSString stringWithUTF8String:result] : @\"\";\n"
         elif func.return_type == 'int64':
             args = ', '.join([f"[{name} intValue]" if ptype in ['cint', 'int']
@@ -414,17 +446,13 @@ void initializeNim() {
         
         # Build JNI signature
         jni_params = []
-        call_params = []
         for name, ptype in func.params:
             if ptype in ['cstring', 'string']:
                 jni_params.append(f"jstring {name}")
-                call_params.append(f'env->GetStringUTFChars({name}, 0)')
             else:
                 jni_params.append(f"jint {name}")
-                call_params.append(name)
         
         jni_params_str = ', '.join(['JNIEnv *env', 'jclass clazz'] + jni_params)
-        call_params_str = ', '.join(call_params)
         
         if func.return_type in ['cstring', 'string']:
             ret_type = "jstring"
@@ -453,25 +481,69 @@ void initializeNim() {
                 if ptype in ['cstring', 'string']:
                     code += f"    env->ReleaseStringUTFChars({name}, {name}Str);\n"
             
-            # Free allocated strings for functions that allocate memory
-            if func.name in ['mobileFactorize', 'mobileCreateUser', 'getSystemInfo']:
+            # Check memory type from parsed annotations
+            if func.memory_type == 'allocated':
                 code += f"    jstring javaString = env->NewStringUTF(result);\n"
                 code += f"    if (result) freeString(result);\n"
                 code += f"    return javaString;\n"
-            else:
+            else:  # literal or unknown (default to literal for safety)
                 code += f"    return env->NewStringUTF(result);\n"
         elif func.return_type == 'int64':
             ret_type = "jlong"
             code += f"extern \"C\" JNIEXPORT {ret_type} JNICALL\n"
             code += f"Java_{class_name}_{method_name}({jni_params_str}) {{\n"
             code += f"    initializeNim();\n"
-            code += f"    return (jlong){func.name}({call_params_str});\n"
+            
+            # Handle string parameters properly
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    code += f"    const char* {name}Str = env->GetStringUTFChars({name}, 0);\n"
+            
+            # Build actual call with converted params
+            actual_params = []
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    actual_params.append(f"{name}Str")
+                else:
+                    actual_params.append(name)
+            actual_params_str = ', '.join(actual_params)
+            
+            code += f"    long long result = {func.name}({actual_params_str});\n"
+            
+            # Release string parameters
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    code += f"    env->ReleaseStringUTFChars({name}, {name}Str);\n"
+            
+            code += f"    return (jlong)result;\n"
         else:
             ret_type = "jint"
             code += f"extern \"C\" JNIEXPORT {ret_type} JNICALL\n"
             code += f"Java_{class_name}_{method_name}({jni_params_str}) {{\n"
             code += f"    initializeNim();\n"
-            code += f"    return {func.name}({call_params_str});\n"
+            
+            # Handle string parameters properly
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    code += f"    const char* {name}Str = env->GetStringUTFChars({name}, 0);\n"
+            
+            # Build actual call with converted params
+            actual_params = []
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    actual_params.append(f"{name}Str")
+                else:
+                    actual_params.append(name)
+            actual_params_str = ', '.join(actual_params)
+            
+            code += f"    int result = {func.name}({actual_params_str});\n"
+            
+            # Release string parameters
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    code += f"    env->ReleaseStringUTFChars({name}, {name}Str);\n"
+            
+            code += f"    return result;\n"
         
         code += f"}}\n\n"
     

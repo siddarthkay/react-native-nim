@@ -3,6 +3,7 @@
 
 import ../business/math
 import ../business/data
+import ../api/core  # Import for allocCString
 import std/strformat
 
 # Math operations bindings
@@ -16,18 +17,20 @@ proc mobileIsPrime*(n: cint): cint {.exportc, dynlib.} =
 
 proc mobileFactorize*(n: cint): cstring {.exportc, dynlib.} =
   ## Mobile wrapper for factorization (returns comma-separated string)
+  ## Allocates memory that must be freed by the caller
   let factors = factorize(n.int)
   var result = ""
   for i, factor in factors:
     if i > 0: result.add(",")
     result.add($factor)
-  return result.cstring
+  return allocCString(result)
 
 # Data operations bindings
 proc mobileCreateUser*(id: cint, name: cstring, email: cstring): cstring {.exportc, dynlib.} =
   ## Mobile wrapper for user creation (returns JSON string)
+  ## Allocates memory that must be freed by the caller
   let user = createUser(id.int, $name, $email)
-  return userToJson(user).cstring
+  return allocCString(userToJson(user))
 
 proc mobileValidateEmail*(email: cstring): cint {.exportc, dynlib.} =
   ## Mobile wrapper for email validation (returns 1 for valid, 0 for invalid)

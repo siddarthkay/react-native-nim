@@ -15,12 +15,14 @@ proc allocCString(s: string): cstring =
   return cstr
 
 proc helloWorld*(): cstring {.exportc.} =
+  ## @literal
   return "Hello from Nim!"
 
 proc addNumbers*(a: cint, b: cint): cint {.exportc.} =
   return a + b
 
 proc getSystemInfo*(): cstring {.exportc.} =
+  ## @allocated
   let info = fmt"Nim {NimVersion} on iOS (arm64)"
   return allocCString(info)
 
@@ -41,6 +43,7 @@ proc mobileIsPrime*(n: cint): cint {.exportc.} =
   return 1
 
 proc mobileFactorize*(n: cint): cstring {.exportc.} =
+  ## @allocated
   var factors: seq[int] = @[]
   var num = n.int
   var d = 2
@@ -54,6 +57,7 @@ proc mobileFactorize*(n: cint): cstring {.exportc.} =
   return allocCString($factors)
 
 proc mobileCreateUser*(id: cint, name: cstring, email: cstring): cstring {.exportc.} =
+  ## @allocated
   let user = User(id: id.int, name: $name, email: $email, active: true)
   return allocCString(Json.encode(user))
 
@@ -64,6 +68,7 @@ proc mobileValidateEmail*(email: cstring): cint {.exportc.} =
   return 0
 
 proc getNimCoreVersion*(): cstring {.exportc.} =
+  ## @literal
   return "1.0.0"
 
 proc freeString*(s: cstring) {.exportc.} =

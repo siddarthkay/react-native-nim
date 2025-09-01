@@ -22,6 +22,7 @@ extern "C" N_LIB_PRIVATE N_NOCONV(void, signalHandler)(int sign_p0);
 extern "C" N_LIB_IMPORT N_CDECL(NCSTRING, helloWorld)(void);
 extern "C" N_LIB_IMPORT N_CDECL(int, addNumbers)(int a_p0, int b_p1);
 extern "C" N_LIB_IMPORT N_CDECL(NCSTRING, getSystemInfo)(void);
+extern "C" N_LIB_IMPORT N_CDECL(void, freeString)(NCSTRING s_p0);
 extern "C" N_LIB_IMPORT N_CDECL(int, mobileFibonacci)(int n_p0);
 extern "C" N_LIB_IMPORT N_CDECL(int, mobileIsPrime)(int n_p0);
 extern "C" N_LIB_IMPORT N_CDECL(NCSTRING, mobileFactorize)(int n_p0);
@@ -30,6 +31,5 @@ extern "C" N_LIB_IMPORT N_CDECL(int, mobileValidateEmail)(NCSTRING email_p0);
 extern "C" N_LIB_IMPORT N_CDECL(void, mobileNimInit)(void);
 extern "C" N_LIB_IMPORT N_CDECL(void, mobileNimShutdown)(void);
 extern "C" N_LIB_IMPORT N_CDECL(NCSTRING, getNimCoreVersion)(void);
-extern "C" N_LIB_IMPORT N_CDECL(void, NimMain)(void);
 N_LIB_IMPORT N_CDECL(void, NimMain)(void);
 #endif /* __main__ */
