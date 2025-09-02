@@ -15,8 +15,8 @@ import json
 @dataclass
 class GeneratorConfig:
     """Configuration for the binding generator."""
-    nim_dir: str = "../nim"
-    output_dir: str = "../modules/nim-bridge"
+    nim_dir: str = "nim"
+    output_dir: str = "modules/nim-bridge"
     package_name: str = "com.nimbridge"
     module_name: str = "NimBridge"
     library_name: str = "nim_functions"
@@ -663,29 +663,31 @@ void initializeNim() {
         # Generate call and return based on type
         if func.return_type in ['cstring', 'string']:
             body += f"    const char* result = {func.name}({actual_params_str});\n"
-            body += self._generate_string_return_handling(func)
+            body += f"    jstring javaString = env->NewStringUTF(result);\n"
+            if func.memory_type == 'allocated':
+                body += f"    if (result) freeString(result);\n"
+            # Release string parameters before return
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    body += f"    env->ReleaseStringUTFChars({name}, {name}Str);\n"
+            body += f"    return javaString;\n"
         elif func.return_type == 'int64':
             body += f"    long long result = {func.name}({actual_params_str});\n"
+            # Release string parameters before return
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    body += f"    env->ReleaseStringUTFChars({name}, {name}Str);\n"
             body += "    return (jlong)result;\n"
         else:
             body += f"    int result = {func.name}({actual_params_str});\n"
+            # Release string parameters before return
+            for name, ptype in func.params:
+                if ptype in ['cstring', 'string']:
+                    body += f"    env->ReleaseStringUTFChars({name}, {name}Str);\n"
             body += "    return result;\n"
-        
-        # Release string parameters
-        for name, ptype in func.params:
-            if ptype in ['cstring', 'string']:
-                body += f"    env->ReleaseStringUTFChars({name}, {name}Str);\n"
         
         return body
     
-    def _generate_string_return_handling(self, func: NimFunction) -> str:
-        """Generate string return value handling."""
-        if func.memory_type == 'allocated':
-            return ("    jstring javaString = env->NewStringUTF(result);\n"
-                   "    if (result) freeString(result);\n"
-                   "    return javaString;\n")
-        else:
-            return "    return env->NewStringUTF(result);\n"
 
 class BindingGenerator:
     """Main binding generator that orchestrates the generation process."""
