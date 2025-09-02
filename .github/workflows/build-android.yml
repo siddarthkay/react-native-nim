@@ -3,28 +3,8 @@ name: Build Android
 on:
   push:
     branches: [master]
-    paths:
-      - '.github/workflows/build-android.yml'
-      - 'mobile-app/android/**'
-      - 'mobile-app/package.json'
-      - 'mobile-app/yarn.lock'
-      - 'mobile-app/src/**'
-      - 'mobile-app/*.js'
-      - 'mobile-app/*.ts'
-      - 'mobile-app/*.tsx'
-      - 'mobile-app/*.json'
   pull_request:
     branches: [master]
-    paths:
-      - '.github/workflows/build-android.yml'
-      - 'mobile-app/android/**'
-      - 'mobile-app/package.json'
-      - 'mobile-app/yarn.lock'
-      - 'mobile-app/src/**'
-      - 'mobile-app/*.js'
-      - 'mobile-app/*.ts'
-      - 'mobile-app/*.tsx'
-      - 'mobile-app/*.json'
   workflow_dispatch:
 
 jobs:
@@ -93,17 +73,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
-          cache: 'gradle'
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
 
       - name: Clear Metro cache
         working-directory: mobile-app
@@ -120,7 +89,7 @@ jobs:
         env:
           NODE_ENV: production
           EXPO_USE_FAST_RESOLVER: 1
-        run: ./gradlew assembleRelease --no-daemon --build-cache
+        run: ./gradlew assembleRelease --no-daemon --no-build-cache
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4

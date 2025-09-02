@@ -3,28 +3,8 @@ name: Build iOS
 on:
   push:
     branches: [master]
-    paths:
-      - '.github/workflows/build-ios.yml'
-      - 'mobile-app/ios/**'
-      - 'mobile-app/package.json'
-      - 'mobile-app/yarn.lock'
-      - 'mobile-app/src/**'
-      - 'mobile-app/*.js'
-      - 'mobile-app/*.ts'
-      - 'mobile-app/*.tsx'
-      - 'mobile-app/*.json'
   pull_request:
     branches: [master]
-    paths:
-      - '.github/workflows/build-ios.yml'
-      - 'mobile-app/ios/**'
-      - 'mobile-app/package.json'
-      - 'mobile-app/yarn.lock'
-      - 'mobile-app/src/**'
-      - 'mobile-app/*.js'
-      - 'mobile-app/*.ts'
-      - 'mobile-app/*.tsx'
-      - 'mobile-app/*.json'
   workflow_dispatch:
 
 jobs:
@@ -81,20 +61,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0'
-          bundler-cache: true
           working-directory: mobile-app/ios
-
-      - name: Cache CocoaPods
-        uses: actions/cache@v4
-        with:
-          path: mobile-app/ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
 
       - name: Install CocoaPods dependencies
         working-directory: mobile-app/ios
         run: |
+          rm -rf Pods || true
           pod install --repo-update || pod install
 
       - name: Select Xcode 16.4
