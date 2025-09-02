@@ -6,5 +6,64 @@
   "library_name": "nim_functions",
   "generate_ios": true,
   "generate_android": true,
-  "generate_typescript": true
+  "generate_typescript": true,
+  "type_mappings": {
+    "cpp": {
+      "cstring": "NCSTRING",
+      "cint": "int",
+      "int": "int",
+      "int64": "long long",
+      "string": "NCSTRING",
+      "bool": "int",
+      "float": "double"
+    },
+    "objc": {
+      "cstring": "NSString *",
+      "string": "NSString *",
+      "cint": "NSNumber *",
+      "int": "NSNumber *",
+      "int64": "NSNumber *",
+      "bool": "NSNumber *",
+      "float": "NSNumber *"
+    },
+    "typescript": {
+      "cstring": "string",
+      "string": "string",
+      "cint": "number",
+      "int": "number",
+      "int64": "number",
+      "bool": "boolean",
+      "float": "number"
+    },
+    "kotlin": {
+      "cstring": "String",
+      "string": "String",
+      "cint": "Double",
+      "int": "Double",
+      "int64": "Double",
+      "bool": "Double",
+      "float": "Double"
+    }
+  },
+  "cmake": {
+    "min_version": "3.13",
+    "project_name": "NimBridge",
+    "android_abis": ["arm64-v8a", "x86_64", "armeabi-v7a", "x86"],
+    "nim_cache_paths": [
+      "../../../../../../nim/cache_android",
+      "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../nim/cache_android",
+      "${CMAKE_SOURCE_DIR}/../../../nim/cache_android"
+    ],
+    "compiler_flags": [
+      "-Wno-unused-function",
+      "-Wno-unused-variable", 
+      "-fno-strict-aliasing"
+    ],
+    "defines": {
+      "_GNU_SOURCE": true,
+      "NIM_INTBITS": "auto"
+    },
+    "link_libraries": ["android", "log", "m", "atomic"],
+    "include_directories": [".", "${NIM_CACHE_DIR}", "${NIM_SOURCE_DIR}"]
+  }
 }
