@@ -24,21 +24,20 @@ class AndroidKotlinGenerator(CodeGenerator):
         return code
 
     def _generate_kotlin_header(self) -> str:
-        """Generate the Kotlin module header."""
+        """Generate the Kotlin module header with TurboModule support."""
         header = self._generate_header("Kotlin module for Nim bridge")
         return f"""{header}package {self.config.package_name}
 
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.module.annotations.ReactModule
+import {self.config.package_name}.Native{self.config.module_name}Spec
 
 @ReactModule(name = {self.config.module_name}Module.NAME)
-class {self.config.module_name}Module(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {{
-    
+class {self.config.module_name}Module(reactContext: ReactApplicationContext) : Native{self.config.module_name}Spec(reactContext) {{
+
     companion object {{
         const val NAME = "{self.config.module_name}"
-        
+
         init {{
             try {{
                 System.loadLibrary("{self.config.library_name}")
@@ -48,7 +47,7 @@ class {self.config.module_name}Module(reactContext: ReactApplicationContext) : R
                 e.printStackTrace()
             }}
         }}
-        
+
 """
 
     def _generate_native_declarations(self) -> str:
@@ -63,19 +62,28 @@ class {self.config.module_name}Module(reactContext: ReactApplicationContext) : R
         return declarations
 
     def _generate_kotlin_methods(self) -> str:
-        """Generate Kotlin React methods."""
+        """Generate Kotlin TurboModule override methods."""
         methods = ""
         for func in self.functions:
+            js_name = func.js_name or func.name
             params_str = self._build_kotlin_method_params(func)
-            ret_type = "String" if func.return_type in ['cstring', 'string'] else "Double"
+            ret_type = self._get_kotlin_return_type(func.return_type)
 
-            methods += f"    @ReactMethod(isBlockingSynchronousMethod = true)\n"
-            methods += f"    fun {func.name}({params_str}): {ret_type} {{\n"
+            methods += f"\n    override fun {js_name}({params_str}): {ret_type} {{\n"
             methods += f"        return try {{\n"
             methods += self._generate_kotlin_method_call(func)
             methods += self._generate_kotlin_error_handling(func)
             methods += f"    }}\n"
         return methods
+
+    def _get_kotlin_return_type(self, nim_type: str) -> str:
+        """Get Kotlin return type for TurboModule spec."""
+        if nim_type in ['cstring', 'string']:
+            return "String"
+        elif nim_type == 'bool':
+            return "Boolean"
+        else:
+            return "Double"
 
     @staticmethod
     def _get_kotlin_native_return_type(nim_type: str) -> str:
@@ -123,7 +131,11 @@ class {self.config.module_name}Module(reactContext: ReactApplicationContext) : R
         args_str = ', '.join(args)
 
         method_name = f"native{func.name[0].upper() + func.name[1:]}"
-        if func.return_type in ['cstring', 'string']:
+
+        # Generate return based on return type
+        if func.return_type == 'bool':
+            return f"            {method_name}({args_str}) != 0\n"
+        elif func.return_type in ['cstring', 'string']:
             return f"            {method_name}({args_str})\n"
         else:
             return f"            {method_name}({args_str}).toDouble()\n"
@@ -131,7 +143,9 @@ class {self.config.module_name}Module(reactContext: ReactApplicationContext) : R
     def _generate_kotlin_error_handling(self, func: NimFunction) -> str:
         """Generate error handling for Kotlin method."""
         error_code = "        } catch (e: Exception) {\n"
-        if func.return_type in ['cstring', 'string']:
+        if func.return_type == 'bool':
+            error_code += "            false\n"
+        elif func.return_type in ['cstring', 'string']:
             error_code += '            "Error: ${e.message}"\n'
         else:
             error_code += "            0.0\n"
@@ -150,19 +164,36 @@ class AndroidKotlinPackageGenerator:
         header = CodeGenerator._generate_header("Kotlin package for Nim bridge")
         return f"""{header}package {self.config.package_name}
 
-import com.facebook.react.ReactPackage
+import com.facebook.react.TurboReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.uimanager.ViewManager
+import com.facebook.react.module.model.ReactModuleInfo
+import com.facebook.react.module.model.ReactModuleInfoProvider
+import com.facebook.react.turbomodule.core.interfaces.TurboModule
 
-class {self.config.module_name}Package : ReactPackage {{
-    
-    override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {{
-        return listOf({self.config.module_name}Module(reactContext))
+class {self.config.module_name}Package : TurboReactPackage() {{
+
+    override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {{
+        return if (name == {self.config.module_name}Module.NAME) {{
+            {self.config.module_name}Module(reactContext)
+        }} else {{
+            null
+        }}
     }}
-    
-    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {{
-        return emptyList()
+
+    override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {{
+        return ReactModuleInfoProvider {{
+            mapOf(
+                {self.config.module_name}Module.NAME to ReactModuleInfo(
+                    {self.config.module_name}Module.NAME,
+                    {self.config.module_name}Module::class.java.name,
+                    false, // canOverrideExistingModule
+                    false, // needsEagerInit
+                    true,  // isCxxModule
+                    true   // isTurboModule
+                )
+            )
+        }}
     }}
 }}"""
 

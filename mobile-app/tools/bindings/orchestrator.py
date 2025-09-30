@@ -43,6 +43,21 @@ class BindingGenerator:
             print("No exported functions found!")
             return False
 
+        # Apply function name mappings from config
+        name_mappings = self.config.data.get('function_name_mappings', {})
+        boolean_returns = self.config.data.get('boolean_returns', [])
+
+        for func in self.functions:
+            # Apply name mapping
+            if func.name in name_mappings:
+                func.js_name = name_mappings[func.name]
+            else:
+                func.js_name = func.name
+
+            # Mark functions that should return booleans
+            if func.name in boolean_returns:
+                func.return_type = 'bool'
+
         return True
 
     def generate_all(self) -> None:
@@ -60,9 +75,9 @@ class BindingGenerator:
             })
 
         if self.config.generate_typescript:
-            generators["TypeScript interface"] = (
+            generators["TypeScript TurboModule spec"] = (
                 TypeScriptInterfaceGenerator(self.functions, self.config),
-                self.output_dir / "src" / f"{self.config.module_name}.types.ts"
+                self.output_dir / "src" / f"Native{self.config.module_name}.ts"
             )
 
         if self.config.generate_android:
@@ -92,9 +107,9 @@ class BindingGenerator:
         print(f"\n✅ Successfully generated bindings for {len(self.functions)} functions!")
         print("\nGenerated files:")
         print("  iOS: nim_functions.h, NimBridge.h, NimBridge.mm")
-        print("  Android: NimBridgeModule.kt, NimBridgePackage.kt, NimBridge.cpp")
-        print("  TypeScript: NimBridge.types.ts")
+        print("  Android: NimBridgeModule.kt, NimBridgePackage.kt, NimBridge.cpp, CMakeLists.txt")
+        print("  TypeScript: NativeNimBridge.ts (TurboModule spec)")
         print("\nNext steps:")
         print("1. Review the generated files")
-        print("2. Run 'pod install' in ios/ directory")
+        print("2. Run 'pod install' in ios/ directory (for iOS)")
         print("3. Rebuild the app")

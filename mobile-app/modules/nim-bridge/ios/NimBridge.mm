@@ -4,8 +4,6 @@
 
 #import "NimBridge.h"
 #include "nim_functions.h"
-
-#ifdef RCT_NEW_ARCH_ENABLED
 #import <ReactCommon/RCTTurboModule.h>
 
 NimBridgeImpl::NimBridgeImpl(std::shared_ptr<facebook::react::CallInvoker> jsInvoker)
@@ -66,7 +64,7 @@ facebook::jsi::String NimBridgeImpl::getVersion(facebook::jsi::Runtime &rt) {
     std::string str = result ? std::string(result) : "";
     return facebook::jsi::String::createFromUtf8(rt, str);
 }
-#endif
+
 
 @implementation NimBridge
 
@@ -77,90 +75,14 @@ RCT_EXPORT_MODULE()
     return NO;
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params
 {
     return std::make_shared<NimBridgeImpl>(params.jsInvoker);
-}
-#endif
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-#ifndef RCT_NEW_ARCH_ENABLED
-        // Initialize Nim runtime only for old arch
-        NimMain();
-        mobileNimInit();
-#endif
-    }
-    return self;
 }
 
 - (void)dealloc
 {
     mobileNimShutdown();
-}
-
-// Generated method exports
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, helloWorld)
-{
-    NCSTRING result = helloWorld();
-    return result ? [NSString stringWithUTF8String:result] : @"";
-}
-
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSNumber *, addNumbers:(nonnull NSNumber *)a withB:(nonnull NSNumber *)b)
-{
-    int result = addNumbers([a intValue], [b intValue]);
-    return @(result);
-}
-
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, getSystemInfo)
-{
-    NCSTRING result = getSystemInfo();
-    NSString *objcString = result ? [NSString stringWithUTF8String:result] : @"";
-    if (result) freeString(result);
-    return objcString;
-}
-
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSNumber *, mobileFibonacci:(nonnull NSNumber *)n)
-{
-    long long result = mobileFibonacci([n intValue]);
-    return @(result);
-}
-
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSNumber *, mobileIsPrime:(nonnull NSNumber *)n)
-{
-    int result = mobileIsPrime([n intValue]);
-    return @(result);
-}
-
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, mobileFactorize:(nonnull NSNumber *)n)
-{
-    NCSTRING result = mobileFactorize([n intValue]);
-    NSString *objcString = result ? [NSString stringWithUTF8String:result] : @"";
-    if (result) freeString(result);
-    return objcString;
-}
-
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, mobileCreateUser:(nonnull NSNumber *)id withName:(nonnull NSString *)name withEmail:(nonnull NSString *)email)
-{
-    NCSTRING result = mobileCreateUser([id intValue], (NCSTRING)[name UTF8String], (NCSTRING)[email UTF8String]);
-    NSString *objcString = result ? [NSString stringWithUTF8String:result] : @"";
-    if (result) freeString(result);
-    return objcString;
-}
-
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSNumber *, mobileValidateEmail:(nonnull NSString *)email)
-{
-    int result = mobileValidateEmail((NCSTRING)[email UTF8String]);
-    return @(result);
-}
-
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, getNimCoreVersion)
-{
-    NCSTRING result = getNimCoreVersion();
-    return result ? [NSString stringWithUTF8String:result] : @"";
 }
 
 @end

@@ -43,8 +43,9 @@ class NimBridgeModule(reactContext: ReactApplicationContext) : NativeNimBridgeSp
         @JvmStatic
         private external fun nativeGetNimCoreVersion(): String
     }
-
+    
     override fun getName(): String = NAME
+
 
     override fun helloWorld(): String {
         return try {

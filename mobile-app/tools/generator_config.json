@@ -7,6 +7,15 @@
   "generate_ios": true,
   "generate_android": true,
   "generate_typescript": true,
+  "function_name_mappings": {
+    "mobileFibonacci": "fibonacci",
+    "mobileIsPrime": "isPrime",
+    "mobileFactorize": "factorize",
+    "mobileCreateUser": "createUser",
+    "mobileValidateEmail": "validateEmail",
+    "getNimCoreVersion": "getVersion"
+  },
+  "boolean_returns": ["mobileIsPrime", "mobileValidateEmail"],
   "type_mappings": {
     "cpp": {
       "cstring": "NCSTRING",
@@ -17,15 +26,6 @@
       "bool": "int",
       "float": "double"
     },
-    "objc": {
-      "cstring": "NSString *",
-      "string": "NSString *",
-      "cint": "NSNumber *",
-      "int": "NSNumber *",
-      "int64": "NSNumber *",
-      "bool": "NSNumber *",
-      "float": "NSNumber *"
-    },
     "typescript": {
       "cstring": "string",
       "string": "string",
@@ -34,15 +34,6 @@
       "int64": "number",
       "bool": "boolean",
       "float": "number"
-    },
-    "kotlin": {
-      "cstring": "String",
-      "string": "String",
-      "cint": "Double",
-      "int": "Double",
-      "int64": "Double",
-      "bool": "Double",
-      "float": "Double"
     }
   },
   "cmake": {

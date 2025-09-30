@@ -7,12 +7,12 @@
 
 extern "C" {
     typedef char* NCSTRING;
-    
+
     // Nim runtime
     void NimMain(void);
     void mobileNimInit(void);
     void mobileNimShutdown(void);
-    
+
     // Generated function declarations
     NCSTRING helloWorld();
     int addNumbers(int a, int b);

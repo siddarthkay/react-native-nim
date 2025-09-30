@@ -3,8 +3,6 @@
 // This file will be overwritten when bindings are regenerated
 
 #import <React/RCTBridgeModule.h>
-
-#ifdef RCT_NEW_ARCH_ENABLED
 #include "NimBridgeSpecJSI.h"
 
 class NimBridgeImpl : public facebook::react::NativeNimBridgeCxxSpec<NimBridgeImpl> {
@@ -28,7 +26,6 @@ public:
     // Version info
     facebook::jsi::String getVersion(facebook::jsi::Runtime &rt);
 };
-#endif
 
 @interface NimBridge : NSObject <RCTBridgeModule, RCTTurboModule>
 

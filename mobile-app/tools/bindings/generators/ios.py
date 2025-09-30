@@ -1,5 +1,5 @@
 """
-iOS platform generators for Nim bridge (Objective-C++).
+iOS platform generators for Nim bridge with TurboModule/JSI support.
 """
 
 from .base import CodeGenerator
@@ -17,20 +17,24 @@ class CppWrapperGenerator(CodeGenerator):
 
 extern "C" {
     typedef char* NCSTRING;
-    
+
     // Nim runtime
     void NimMain(void);
     void mobileNimInit(void);
     void mobileNimShutdown(void);
-    
+
     // Generated function declarations
 """
 
         # Add function declarations
         for func in self.functions:
             ret_type = self.type_mapper.nim_to_cpp_type(func.return_type)
-            params_str = ', '.join([f"{self.type_mapper.nim_to_cpp_type(ptype)} {name}"
-                                   for name, ptype in func.params])
+            params_str = ", ".join(
+                [
+                    f"{self.type_mapper.nim_to_cpp_type(ptype)} {name}"
+                    for name, ptype in func.params
+                ]
+            )
             code += f"    {ret_type} {func.name}({params_str});\n"
 
         code += "    \n    // Memory management\n"
@@ -41,30 +45,118 @@ extern "C" {
 
 
 class ObjcHeaderGenerator(CodeGenerator):
-    """Generates Objective-C header file."""
+    """Generates Objective-C header file with TurboModule/JSI support."""
 
     def generate(self) -> str:
-        """Generate Objective-C header file."""
+        """Generate Objective-C header file for New Architecture."""
         code = CodeGenerator._generate_header("Objective-C++ bridge header")
+
         code += """#import <React/RCTBridgeModule.h>
+#include "NimBridgeSpecJSI.h"
 
-@interface NimBridge : NSObject <RCTBridgeModule>
+class NimBridgeImpl : public facebook::react::NativeNimBridgeCxxSpec<NimBridgeImpl> {
+public:
+    NimBridgeImpl(std::shared_ptr<facebook::react::CallInvoker> jsInvoker);
 
-@end
 """
+
+        # Group functions for comments
+        core_funcs = []
+        math_funcs = []
+        data_funcs = []
+        version_funcs = []
+
+        for func in self.functions:
+            js_name = func.js_name or func.name
+            if js_name in ["helloWorld", "addNumbers", "getSystemInfo"]:
+                core_funcs.append(func)
+            elif js_name in ["fibonacci", "isPrime", "factorize"]:
+                math_funcs.append(func)
+            elif js_name in ["createUser", "validateEmail"]:
+                data_funcs.append(func)
+            elif js_name in ["getVersion"]:
+                version_funcs.append(func)
+
+        def generate_declarations(funcs, comment=None):
+            result = ""
+            if comment:
+                result += f"    // {comment}\n"
+            for func in funcs:
+                js_name = func.js_name or func.name
+                jsi_ret_type = self._get_jsi_return_type(func.return_type)
+                jsi_params = self._build_jsi_params(func)
+                result += f"    {jsi_ret_type} {js_name}(facebook::jsi::Runtime &rt{', ' + jsi_params if jsi_params else ''});\n"
+            return result
+
+        code += generate_declarations(core_funcs, "Core API")
+        if math_funcs:
+            code += "\n"
+            code += generate_declarations(math_funcs, "Math operations")
+        if data_funcs:
+            code += "\n"
+            code += generate_declarations(data_funcs, "Data operations")
+        if version_funcs:
+            code += "\n"
+            code += generate_declarations(version_funcs, "Version info")
+
+        code += """};\n\n"""
+        code += f"""@interface {self.config.module_name} : NSObject <RCTBridgeModule, RCTTurboModule>\n\n@end\n"""
         return code
+
+    def _get_jsi_return_type(self, nim_type: str) -> str:
+        """Get JSI return type for a Nim type."""
+        if nim_type in ["cstring", "string"]:
+            return "facebook::jsi::String"
+        elif nim_type == "bool":
+            return "bool"
+        elif nim_type in ["cint", "int", "int64"]:
+            return "double"
+        else:
+            return "double"
+
+    def _build_jsi_params(self, func: NimFunction) -> str:
+        """Build JSI parameter list."""
+        params = []
+        for name, ptype in func.params:
+            if ptype in ["cstring", "string"]:
+                params.append(f"facebook::jsi::String {name}")
+            elif ptype == "bool":
+                params.append(f"bool {name}")
+            else:
+                params.append(f"double {name}")
+        return ", ".join(params)
 
 
 class ObjcBridgeGenerator(CodeGenerator):
-    """Generates Objective-C++ bridge code."""
+    """Generates Objective-C++ bridge code with TurboModule/JSI support."""
 
     def generate(self) -> str:
-        """Generate Objective-C++ bridge code."""
+        """Generate Objective-C++ bridge code for New Architecture."""
         code = CodeGenerator._generate_header("Objective-C++ bridge")
-        code += """#import "NimBridge.h"
-#include "nim_functions.h"
+        code += f"""#import "{self.config.module_name}.h"
+#include "{self.config.library_name}.h"
+#import <ReactCommon/RCTTurboModule.h>
 
-@implementation NimBridge
+{self.config.module_name}Impl::{self.config.module_name}Impl(std::shared_ptr<facebook::react::CallInvoker> jsInvoker)
+    : Native{self.config.module_name}CxxSpec(std::move(jsInvoker)) {{
+    // Initialize Nim runtime
+    NimMain();
+    mobileNimInit();
+}}
+
+"""
+
+        # Generate JSI method implementations
+        for i, func in enumerate(self.functions):
+            code += self._generate_jsi_method(
+                func, is_last=(i == len(self.functions) - 1)
+            )
+
+        code += (
+            """
+@implementation """
+            + self.config.module_name
+            + """
 
 RCT_EXPORT_MODULE()
 
@@ -73,15 +165,11 @@ RCT_EXPORT_MODULE()
     return NO;
 }
 
-- (instancetype)init
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params
 {
-    self = [super init];
-    if (self) {
-        // Initialize Nim runtime
-        NimMain();
-        mobileNimInit();
-    }
-    return self;
+    return std::make_shared<"""
+            + self.config.module_name
+            + """Impl>(params.jsInvoker);
 }
 
 - (void)dealloc
@@ -89,69 +177,85 @@ RCT_EXPORT_MODULE()
     mobileNimShutdown();
 }
 
-// Generated method exports
+@end
 """
-
-        for func in self.functions:
-            code += self._generate_objc_method(func)
-
-        code += "@end\n"
+        )
         return code
 
-    def _generate_objc_method(self, func: NimFunction) -> str:
-        """Generate a single Objective-C method."""
-        ret_type = self.type_mapper.nim_to_objc_type(func.return_type)
+    def _generate_jsi_method(self, func: NimFunction, is_last: bool = False) -> str:
+        """Generate JSI method implementation for New Architecture."""
+        js_name = func.js_name or func.name
+        ret_type = self._get_jsi_return_type(func.return_type)
+        params_str = self._build_jsi_params(func)
 
-        # Build method signature
-        if not func.params:
-            method_sig = func.name
-        else:
-            parts = []
-            for i, (name, ptype) in enumerate(func.params):
-                objc_type = self.type_mapper.nim_to_objc_type(ptype)
-                if i == 0:
-                    parts.append(f"{func.name}:(nonnull {objc_type}){name}")
-                else:
-                    parts.append(f"with{name.capitalize()}:(nonnull {objc_type}){name}")
-            method_sig = ' '.join(parts)
+        method_code = f"{ret_type} {self.config.module_name}Impl::{js_name}(facebook::jsi::Runtime &rt"
+        if params_str:
+            method_code += f", {params_str}"
+        method_code += ") {\n"
 
-        method_code = f"RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD({ret_type}, {method_sig})\n"
-        method_code += "{\n"
-        method_code += self._generate_objc_method_body(func)
-        method_code += "}\n\n"
+        # Generate method body
+        method_code += self._generate_jsi_method_body(func, js_name)
+        # Last method gets one blank line, others get two
+        method_code += "}\n\n" if not is_last else "}\n\n"
 
         return method_code
 
-    def _generate_objc_method_body(self, func: NimFunction) -> str:
-        """Generate the body of an Objective-C method."""
-        args = self._build_objc_args(func)
+    def _generate_jsi_method_body(self, func: NimFunction, js_name: str) -> str:
+        """Generate the body of a JSI method."""
+        body = ""
 
-        if func.return_type in ['cstring', 'string']:
-            body = f"    NCSTRING result = {func.name}({args});\n"
-            if func.memory_type == 'allocated':
-                body += f"    NSString *objcString = result ? [NSString stringWithUTF8String:result] : @\"\";\n"
-                body += f"    if (result) freeString(result);\n"
-                body += f"    return objcString;\n"
+        # Convert JSI parameters to C types and build arguments
+        args = []
+        for name, ptype in func.params:
+            if ptype in ["cstring", "string"]:
+                body += f"    std::string {name}Str = {name}.utf8(rt);\n"
+                args.append(f"const_cast<NCSTRING>({name}Str.c_str())")
+            elif ptype in ["cint", "int", "int64"]:
+                args.append(f"static_cast<int>({name})")
             else:
-                body += f"    return result ? [NSString stringWithUTF8String:result] : @\"\";\n"
-        elif func.return_type == 'int64':
-            body = f"    long long result = {func.name}({args});\n"
-            body += f"    return @(result);\n"
+                args.append(name)
+
+        args_str = ", ".join(args)
+
+        # Generate return statement based on return type
+        # Use :: prefix only when Nim name == JS name to avoid ambiguity
+        prefix = "::" if func.name == js_name else ""
+
+        if func.return_type in ["cstring", "string"]:
+            body += f"    NCSTRING result = {prefix}{func.name}({args_str});\n"
+            body += f'    std::string str = result ? std::string(result) : "";\n'
+            if func.memory_type == "allocated":
+                body += f"    if (result) freeString(result);\n"
+            body += f"    return facebook::jsi::String::createFromUtf8(rt, str);\n"
+        elif func.return_type == "bool":
+            body += f"    return {prefix}{func.name}({args_str}) != 0;\n"
+        elif func.return_type == "int64":
+            body += (
+                f"    return static_cast<double>({prefix}{func.name}({args_str}));\n"
+            )
         else:
-            body = f"    int result = {func.name}({args});\n"
-            body += f"    return @(result);\n"
+            body += f"    return {prefix}{func.name}({args_str});\n"
 
         return body
 
-    @staticmethod
-    def _build_objc_args(func: NimFunction) -> str:
-        """Build argument list for Objective-C method call."""
-        args = []
+    def _get_jsi_return_type(self, nim_type: str) -> str:
+        """Get JSI return type."""
+        if nim_type in ["cstring", "string"]:
+            return "facebook::jsi::String"
+        elif nim_type == "bool":
+            return "bool"
+        else:
+            return "double"
+
+    def _build_jsi_params(self, func: NimFunction) -> str:
+        """Build JSI parameter list."""
+        params = []
         for name, ptype in func.params:
-            if ptype in ['cstring', 'string']:
-                args.append(f"(NCSTRING)[{name} UTF8String]")
-            elif ptype in ['cint', 'int']:
-                args.append(f"[{name} intValue]")
+            if ptype in ["cstring", "string"]:
+                params.append(f"facebook::jsi::String {name}")
+            elif ptype == "bool":
+                params.append(f"bool {name}")
             else:
-                args.append(name)
-        return ', '.join(args)
+                params.append(f"double {name}")
+        return ", ".join(params)
+
