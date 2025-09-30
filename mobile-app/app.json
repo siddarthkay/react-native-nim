@@ -3,17 +3,30 @@
     "name": "nim-rn-mobile-app",
     "slug": "nim-rn-mobile-app",
     "version": "1.0.0",
-    "description": "React Native app showcasing Nim integration",
-    "sdkVersion": "52.0.0",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
+      "supportsTablet": true,
       "bundleIdentifier": "io.reactnativenim.app"
     },
     "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
       "package": "io.reactnativenim.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     }
   }
 }

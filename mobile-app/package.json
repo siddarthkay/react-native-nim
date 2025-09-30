@@ -17,9 +17,12 @@
   },
   "dependencies": {
     "@types/react": "~18.3.12",
-    "expo": "~53.0.20",
-    "react": "19.0.0",
-    "react-native": "0.79.6",
+    "babel-preset-expo": "^54.0.3",
+    "expo": "~54.0.10",
+    "expo-dev-client": "^6.0.12",
+    "expo-status-bar": "^3.0.8",
+    "react": "19.1.0",
+    "react-native": "0.81.4",
     "typescript": "^5.3.0"
   },
   "devDependencies": {
@@ -31,7 +34,7 @@
     "@react-native/eslint-config": "^0.79.6",
     "@react-native/metro-config": "^0.79.6",
     "@react-native/typescript-config": "^0.79.6",
-    "@types/react": "~18.3.12",
+    "@types/react": "~19.1.0",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.3",
     "eslint": "^8.19.0",
