@@ -296,6 +296,7 @@ PODS:
     - RCTTypeSafety
     - React-Codegen
     - React-Core
+    - React-NativeModulesApple
     - ReactCommon/turbomodule/core
   - RCT-Folly (2024.11.18.00):
     - boost
@@ -2838,7 +2839,7 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 35c763d57c9832d0eef764316ca1c4d043581394
-  NimBridge: e3bf2fde48f7e6c5859d637c84b9e1c0d45cd781
+  NimBridge: 70b6c653edd5f92ee764879f46a6b53ba51da94f
   RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
   RCTDeprecation: c0ed3249a97243002615517dff789bf4666cf585
   RCTRequired: 58719f5124f9267b5f9649c08bf23d9aea845b23
@@ -2901,11 +2902,11 @@ SPEC CHECKSUMS:
   React-timing: 1e6a8acb66e2b7ac9d418956617fd1fdb19322fd
   React-utils: 52bbb03f130319ef82e4c3bc7a85eaacdb1fec87
   ReactAppDependencyProvider: 433ddfb4536948630aadd5bd925aff8a632d2fe3
-  ReactCodegen: 1d05923ad119796be9db37830d5e5dc76586aa00
+  ReactCodegen: aded76e44f752489dfa4a3ec0d41df08dd3ac865
   ReactCommon: 394c6b92765cf6d211c2c3f7f6bc601dffb316a6
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 922d794dce2af9c437f864bf4093abfa7a131adb
 
-PODFILE CHECKSUM: 30222b370f2c6e2622deeb5e8d786e95202de871
+PODFILE CHECKSUM: 5548583703093faf0a61d6a070017162e1c2571a
 
 COCOAPODS: 1.16.2

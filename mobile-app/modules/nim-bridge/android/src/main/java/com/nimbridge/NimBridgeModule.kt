@@ -5,16 +5,15 @@
 package com.nimbridge
 
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.module.annotations.ReactModule
+import com.nimbridge.NativeNimBridgeSpec
 
 @ReactModule(name = NimBridgeModule.NAME)
-class NimBridgeModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
-    
+class NimBridgeModule(reactContext: ReactApplicationContext) : NativeNimBridgeSpec(reactContext) {
+
     companion object {
         const val NAME = "NimBridge"
-        
+
         init {
             try {
                 System.loadLibrary("nim_functions")
@@ -24,7 +23,7 @@ class NimBridgeModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
                 e.printStackTrace()
             }
         }
-        
+
         @JvmStatic
         private external fun nativeHelloWorld(): String
         @JvmStatic
@@ -44,75 +43,74 @@ class NimBridgeModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         @JvmStatic
         private external fun nativeGetNimCoreVersion(): String
     }
-    
+
     override fun getName(): String = NAME
 
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun helloWorld(): String {
+    override fun helloWorld(): String {
         return try {
             nativeHelloWorld()
         } catch (e: Exception) {
             "Error: ${e.message}"
         }
     }
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun addNumbers(a: Double, b: Double): Double {
+
+    override fun addNumbers(a: Double, b: Double): Double {
         return try {
             nativeAddNumbers(a.toInt(), b.toInt()).toDouble()
         } catch (e: Exception) {
             0.0
         }
     }
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun getSystemInfo(): String {
+
+    override fun getSystemInfo(): String {
         return try {
             nativeGetSystemInfo()
         } catch (e: Exception) {
             "Error: ${e.message}"
         }
     }
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun mobileFibonacci(n: Double): Double {
+
+    override fun fibonacci(n: Double): Double {
         return try {
             nativeMobileFibonacci(n.toInt()).toDouble()
         } catch (e: Exception) {
             0.0
         }
     }
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun mobileIsPrime(n: Double): Double {
+
+    override fun isPrime(n: Double): Boolean {
         return try {
-            nativeMobileIsPrime(n.toInt()).toDouble()
+            nativeMobileIsPrime(n.toInt()) != 0
         } catch (e: Exception) {
-            0.0
+            false
         }
     }
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun mobileFactorize(n: Double): String {
+
+    override fun factorize(n: Double): String {
         return try {
             nativeMobileFactorize(n.toInt())
         } catch (e: Exception) {
             "Error: ${e.message}"
         }
     }
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun mobileCreateUser(id: Double, name: String, email: String): String {
+
+    override fun createUser(id: Double, name: String, email: String): String {
         return try {
             nativeMobileCreateUser(id.toInt(), name, email)
         } catch (e: Exception) {
             "Error: ${e.message}"
         }
     }
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun mobileValidateEmail(email: String): Double {
+
+    override fun validateEmail(email: String): Boolean {
         return try {
-            nativeMobileValidateEmail(email).toDouble()
+            nativeMobileValidateEmail(email) != 0
         } catch (e: Exception) {
-            0.0
+            false
         }
     }
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    fun getNimCoreVersion(): String {
+
+    override fun getVersion(): String {
         return try {
             nativeGetNimCoreVersion()
         } catch (e: Exception) {

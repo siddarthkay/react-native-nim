@@ -54,5 +54,13 @@
     "cross-platform"
   ],
   "author": "Nim-RN Team",
-  "license": "MIT"
+  "license": "MIT",
+  "codegenConfig": {
+    "name": "NimBridgeSpec",
+    "type": "modules",
+    "jsSrcsDir": "modules/nim-bridge/src",
+    "android": {
+      "javaPackageName": "com.nimbridge"
+    }
+  }
 }

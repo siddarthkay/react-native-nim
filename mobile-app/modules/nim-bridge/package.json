@@ -18,5 +18,13 @@
   },
   "peerDependencies": {
     "react-native": "*"
+  },
+  "codegenConfig": {
+    "name": "NimBridgeSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.nimbridge"
+    }
   }
 }

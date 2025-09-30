@@ -4,6 +4,32 @@
 
 #import <React/RCTBridgeModule.h>
 
-@interface NimBridge : NSObject <RCTBridgeModule>
+#ifdef RCT_NEW_ARCH_ENABLED
+#include "NimBridgeSpecJSI.h"
+
+class NimBridgeImpl : public facebook::react::NativeNimBridgeCxxSpec<NimBridgeImpl> {
+public:
+    NimBridgeImpl(std::shared_ptr<facebook::react::CallInvoker> jsInvoker);
+
+    // Core API
+    facebook::jsi::String helloWorld(facebook::jsi::Runtime &rt);
+    double addNumbers(facebook::jsi::Runtime &rt, double a, double b);
+    facebook::jsi::String getSystemInfo(facebook::jsi::Runtime &rt);
+
+    // Math operations
+    double fibonacci(facebook::jsi::Runtime &rt, double n);
+    bool isPrime(facebook::jsi::Runtime &rt, double n);
+    facebook::jsi::String factorize(facebook::jsi::Runtime &rt, double n);
+
+    // Data operations
+    facebook::jsi::String createUser(facebook::jsi::Runtime &rt, double id, facebook::jsi::String name, facebook::jsi::String email);
+    bool validateEmail(facebook::jsi::Runtime &rt, facebook::jsi::String email);
+
+    // Version info
+    facebook::jsi::String getVersion(facebook::jsi::Runtime &rt);
+};
+#endif
+
+@interface NimBridge : NSObject <RCTBridgeModule, RCTTurboModule>
 
 @end

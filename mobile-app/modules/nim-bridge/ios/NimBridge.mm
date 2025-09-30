@@ -5,6 +5,69 @@
 #import "NimBridge.h"
 #include "nim_functions.h"
 
+#ifdef RCT_NEW_ARCH_ENABLED
+#import <ReactCommon/RCTTurboModule.h>
+
+NimBridgeImpl::NimBridgeImpl(std::shared_ptr<facebook::react::CallInvoker> jsInvoker)
+    : NativeNimBridgeCxxSpec(std::move(jsInvoker)) {
+    // Initialize Nim runtime
+    NimMain();
+    mobileNimInit();
+}
+
+facebook::jsi::String NimBridgeImpl::helloWorld(facebook::jsi::Runtime &rt) {
+    NCSTRING result = ::helloWorld();
+    std::string str = result ? std::string(result) : "";
+    return facebook::jsi::String::createFromUtf8(rt, str);
+}
+
+double NimBridgeImpl::addNumbers(facebook::jsi::Runtime &rt, double a, double b) {
+    return ::addNumbers(static_cast<int>(a), static_cast<int>(b));
+}
+
+facebook::jsi::String NimBridgeImpl::getSystemInfo(facebook::jsi::Runtime &rt) {
+    NCSTRING result = ::getSystemInfo();
+    std::string str = result ? std::string(result) : "";
+    if (result) freeString(result);
+    return facebook::jsi::String::createFromUtf8(rt, str);
+}
+
+double NimBridgeImpl::fibonacci(facebook::jsi::Runtime &rt, double n) {
+    return static_cast<double>(mobileFibonacci(static_cast<int>(n)));
+}
+
+bool NimBridgeImpl::isPrime(facebook::jsi::Runtime &rt, double n) {
+    return mobileIsPrime(static_cast<int>(n)) != 0;
+}
+
+facebook::jsi::String NimBridgeImpl::factorize(facebook::jsi::Runtime &rt, double n) {
+    NCSTRING result = mobileFactorize(static_cast<int>(n));
+    std::string str = result ? std::string(result) : "";
+    if (result) freeString(result);
+    return facebook::jsi::String::createFromUtf8(rt, str);
+}
+
+facebook::jsi::String NimBridgeImpl::createUser(facebook::jsi::Runtime &rt, double id, facebook::jsi::String name, facebook::jsi::String email) {
+    std::string nameStr = name.utf8(rt);
+    std::string emailStr = email.utf8(rt);
+    NCSTRING result = mobileCreateUser(static_cast<int>(id), const_cast<NCSTRING>(nameStr.c_str()), const_cast<NCSTRING>(emailStr.c_str()));
+    std::string str = result ? std::string(result) : "";
+    if (result) freeString(result);
+    return facebook::jsi::String::createFromUtf8(rt, str);
+}
+
+bool NimBridgeImpl::validateEmail(facebook::jsi::Runtime &rt, facebook::jsi::String email) {
+    std::string emailStr = email.utf8(rt);
+    return mobileValidateEmail(const_cast<NCSTRING>(emailStr.c_str())) != 0;
+}
+
+facebook::jsi::String NimBridgeImpl::getVersion(facebook::jsi::Runtime &rt) {
+    NCSTRING result = getNimCoreVersion();
+    std::string str = result ? std::string(result) : "";
+    return facebook::jsi::String::createFromUtf8(rt, str);
+}
+#endif
+
 @implementation NimBridge
 
 RCT_EXPORT_MODULE()
@@ -14,13 +77,22 @@ RCT_EXPORT_MODULE()
     return NO;
 }
 
+#ifdef RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params
+{
+    return std::make_shared<NimBridgeImpl>(params.jsInvoker);
+}
+#endif
+
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        // Initialize Nim runtime
+#ifndef RCT_NEW_ARCH_ENABLED
+        // Initialize Nim runtime only for old arch
         NimMain();
         mobileNimInit();
+#endif
     }
     return self;
 }

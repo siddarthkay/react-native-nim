@@ -14,11 +14,23 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.facebook.react'
 
 def reactNativeArchitectures() {
     def value = project.getProperties().get("reactNativeArchitectures")
     // Only use 64-bit architectures for Nim compatibility
     return value ? value.split(",") : ["x86_64", "arm64-v8a"]
+}
+
+react {
+    // Point to the root project directory
+    root = file("../../../")
+    reactNativeDir = new File(["node", "--print", "require.resolve('react-native/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim()).getParentFile().getAbsoluteFile()
+    codegenDir = new File(["node", "--print", "require.resolve('@react-native/codegen/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim()).getParentFile().getAbsoluteFile()
+
+    // Point to the module's src directory for codegen
+    libraryName = "NimBridge"
+    codegenJavaPackageName = "com.nimbridge"
 }
 
 android {
