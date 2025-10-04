@@ -53,30 +53,6 @@ target 'nimrnmobileapp' do
       :ccache_enabled => podfile_properties['apple.ccacheEnabled'] == 'true',
     )
 
-    # Patch Folly source files to disable coroutines
-    folly_expected = File.join(installer.sandbox.root, 'RCT-Folly/folly/Expected.h')
-    folly_optional = File.join(installer.sandbox.root, 'RCT-Folly/folly/Optional.h')
-
-    if File.exist?(folly_expected)
-      # Make file writable
-      system("chmod u+w \"#{folly_expected}\"")
-      contents = File.read(folly_expected)
-      # Replace #if FOLLY_HAS_COROUTINES with #if 0 to disable the coroutine sections
-      contents.gsub!(/#if FOLLY_HAS_COROUTINES/, '#if 0 // FOLLY_HAS_COROUTINES disabled by Podfile patch')
-      File.write(folly_expected, contents)
-      puts "✅ Patched #{folly_expected} to disable coroutines"
-    end
-
-    if File.exist?(folly_optional)
-      # Make file writable
-      system("chmod u+w \"#{folly_optional}\"")
-      contents = File.read(folly_optional)
-      # Replace #if FOLLY_HAS_COROUTINES with #if 0 to disable the coroutine sections
-      contents.gsub!(/#if FOLLY_HAS_COROUTINES/, '#if 0 // FOLLY_HAS_COROUTINES disabled by Podfile patch')
-      File.write(folly_optional, contents)
-      puts "✅ Patched #{folly_optional} to disable coroutines"
-    end
-
     # fix for Xcode 16 build issues
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|

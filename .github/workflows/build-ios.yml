@@ -63,12 +63,6 @@ jobs:
           ruby-version: '3.0'
           working-directory: mobile-app/ios
 
-      - name: Install CocoaPods dependencies
-        working-directory: mobile-app/ios
-        run: |
-          rm -rf Pods || true
-          pod install --repo-update || pod install
-
       - name: Select Xcode 16.4
         run: sudo xcode-select -s "/Applications/Xcode_16.4.app/Contents/Developer"
 
@@ -83,22 +77,29 @@ jobs:
           rm -rf /tmp/metro-* || true
           rm -rf ios/build || true
 
-      - name: Generate ReactCodegen files
-        working-directory: mobile-app/ios
+      - name: Generate codegen artifacts
+        working-directory: mobile-app
+        env:
+          RCT_NEW_ARCH_ENABLED: '1'
         run: |
-          # Generate ReactCodegen files (this will fail but creates the required files)
-          xcodebuild -workspace nimrnmobileapp.xcworkspace \
-            -scheme ReactCodegen \
-            -sdk iphonesimulator \
-            -configuration Release \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO \
-            ARCHS=arm64 \
-            ONLY_ACTIVE_ARCH=YES || echo "ReactCodegen files generated (expected failure)"
+          # Generate codegen artifacts for all modules including custom nim-bridge
+          node node_modules/react-native/scripts/generate-codegen-artifacts.js \
+            --path . \
+            --targetPlatform ios \
+            --outputPath ios/build/generated/ios
+
+      - name: Install CocoaPods dependencies
+        working-directory: mobile-app/ios
+        env:
+          RCT_NEW_ARCH_ENABLED: '1'
+        run: |
+          rm -rf Pods || true
+          pod install --repo-update || pod install
 
       - name: Build iOS Simulator App
         working-directory: mobile-app/ios
+        env:
+          RCT_NEW_ARCH_ENABLED: '1'
         run: |
           set -o pipefail
           xcodebuild -workspace nimrnmobileapp.xcworkspace \
@@ -110,6 +111,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             ARCHS=arm64 \
             ONLY_ACTIVE_ARCH=YES \
+            RCT_NEW_ARCH_ENABLED=1 \
             | xcbeautify
 
       - name: Prepare iOS app for upload
