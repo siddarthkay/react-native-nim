@@ -1,0 +1,40 @@
+{
+  "name": "create-react-native-nim",
+  "version": "0.1.0",
+  "description": "Scaffold a React Native app with Nim business logic integration",
+  "bin": {
+    "create-react-native-nim": "./bin/create-react-native-nim.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/"
+  ],
+  "scripts": {
+    "prepublishOnly": "rm -rf templates && cp -R ../templates ."
+  },
+  "keywords": [
+    "react-native",
+    "nim",
+    "template",
+    "scaffold",
+    "mobile",
+    "native",
+    "turbomodules",
+    "jsi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siddarthkay/react-native-nim.git",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/siddarthkay/react-native-nim#readme",
+  "bugs": {
+    "url": "https://github.com/siddarthkay/react-native-nim/issues"
+  },
+  "author": "siddarthkay",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

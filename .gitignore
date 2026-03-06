@@ -65,3 +65,6 @@ bindings/ios/nimcache/
 # Temporary files
 tmp/
 temp/
+
+# CLI templates (bundled during npm publish via prepublishOnly)
+cli/templates/

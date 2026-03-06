@@ -1,0 +1,29 @@
+{
+  "name": "nim-bridge",
+  "version": "1.0.0",
+  "description": "React Native bridge to Nim programming language",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native",
+    "nim",
+    "native-module"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "react-native": "*"
+  },
+  "peerDependencies": {
+    "react-native": "*"
+  },
+  "codegenConfig": {
+    "name": "NimBridgeSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.nimbridge"
+    }
+  }
+}

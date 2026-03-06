@@ -1,0 +1,7 @@
+{
+  "name": "default",
+  "description": "React Native + Nim with automatic binding generation",
+  "nim": ">=2.0.0",
+  "react-native": "0.81.4",
+  "expo": "~54.0.10"
+}

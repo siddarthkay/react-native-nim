@@ -9,53 +9,27 @@ on:
 
 jobs:
   build-ios:
-    name: Build iOS IPA
+    name: Build iOS Simulator App
     runs-on: macos-15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Enable Corepack for Yarn
+      - name: Enable Corepack
         run: |
           corepack enable
-          cd mobile-app
-          corepack use yarn@4.9.4
-
-      - name: Install dependencies
-        working-directory: mobile-app
-        run: yarn install --immutable
+          cd mobile-app && corepack use yarn@4.9.4
 
       - name: Setup Nim
         run: |
-          # Install Nim
           brew install nim
           echo "$HOME/.nimble/bin" >> $GITHUB_PATH
-          
-          # Verify installation
-          nim --version
-          nimble --version
-
-      - name: Install Nim dependencies
-        working-directory: mobile-app/nim
-        run: |
-          if [ -f "nimbridge.nimble" ]; then
-            nimble install -d
-          fi
-
-      - name: Build Nim code for iOS
-        working-directory: mobile-app
-        run: |
-          # Run the build script to compile Nim for iOS
-          chmod +x tools/build-mobile.sh
-          ./tools/build-mobile.sh
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -66,62 +40,13 @@ jobs:
       - name: Select Xcode 16.4
         run: sudo xcode-select -s "/Applications/Xcode_16.4.app/Contents/Developer"
 
-      - name: Install xcbeautify
-        run: brew install xcbeautify
-
-      - name: Clear Metro and Xcode caches
+      - name: Build iOS
         working-directory: mobile-app
-        run: |
-          echo "" | yarn react-native clean
-          rm -rf node_modules/.cache || true
-          rm -rf /tmp/metro-* || true
-          rm -rf ios/build || true
-
-      - name: Generate codegen artifacts
-        working-directory: mobile-app
-        env:
-          RCT_NEW_ARCH_ENABLED: '1'
-        run: |
-          # Generate codegen artifacts for all modules including custom nim-bridge
-          node node_modules/react-native/scripts/generate-codegen-artifacts.js \
-            --path . \
-            --targetPlatform ios \
-            --outputPath ios/build/generated/ios
-
-      - name: Install CocoaPods dependencies
-        working-directory: mobile-app/ios
-        env:
-          RCT_NEW_ARCH_ENABLED: '1'
-        run: |
-          rm -rf Pods || true
-          pod install --repo-update || pod install
-
-      - name: Build iOS Simulator App
-        working-directory: mobile-app/ios
-        env:
-          RCT_NEW_ARCH_ENABLED: '1'
-        run: |
-          set -o pipefail
-          xcodebuild -workspace nimrnmobileapp.xcworkspace \
-            -scheme nimrnmobileapp \
-            -sdk iphonesimulator \
-            -configuration Release \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO \
-            ARCHS=arm64 \
-            ONLY_ACTIVE_ARCH=YES \
-            RCT_NEW_ARCH_ENABLED=1 \
-            | xcbeautify
-
-      - name: Prepare iOS app for upload
-        working-directory: mobile-app/ios/build/Build/Products/Release-iphonesimulator
-        run: |
-          cp -r nimrnmobileapp.app nim-rn-ios.app
+        run: make build-ios
 
       - name: Upload Simulator Build
         uses: actions/upload-artifact@v4
         with:
           name: nim-rn-ios.app
-          path: mobile-app/ios/build/Build/Products/Release-iphonesimulator/nim-rn-ios.app
+          path: mobile-app/ios/build/Build/Products/Release-iphonesimulator/nimrnmobileapp.app
           retention-days: 60

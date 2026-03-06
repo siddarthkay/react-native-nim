@@ -31,7 +31,7 @@
         androidSdk = androidComposition.androidsdk;
       in
       {
-        devShells.default = pkgs.mkShell {
+        devShells.default = pkgs.mkShellNoCC {
           buildInputs = with pkgs; [
             # Node.js (yarn managed by project's corepack)
             nodejs_20
@@ -39,14 +39,11 @@
             # Python for generate_bindings.py
             python3
             python3Packages.pip
-
-            # Nim compiler
             nim
 
             # Build essentials
             git
             gnumake
-            gcc
 
             # Mobile development tools
             watchman
@@ -60,15 +57,21 @@
             jq
             curl
             wget
+          ] ++ lib.optionals stdenv.isLinux [
+            nimble
+            gcc
           ] ++ lib.optionals stdenv.isDarwin [
             # macOS specific tools for iOS development
             cocoapods
-            darwin.apple_sdk.frameworks.CoreServices
-            darwin.libobjc
           ];
 
           shellHook = ''
-            # Use system's existing Yarn v4 setup via corepack
+            # Enable Corepack so Yarn v4 (from packageManager field) is used
+            # Nix store is read-only, so install corepack shims to a writable directory
+            export COREPACK_INSTALL_DIR="$HOME/.corepack-bin"
+            mkdir -p "$COREPACK_INSTALL_DIR"
+            corepack enable --install-directory "$COREPACK_INSTALL_DIR" 2>/dev/null || true
+            export PATH="$COREPACK_INSTALL_DIR:$PATH"
             export COREPACK_ENABLE_STRICT=0
             
             # Create writable Android SDK directory
@@ -83,15 +86,16 @@
               # Copy the Nix Android SDK to writable location
               cp -r ${androidSdk}/libexec/android-sdk/* "$ANDROID_SDK_ROOT/" 2>/dev/null || true
               
-              # Make it writable
+              # Make it writable (nix store files are read-only)
               chmod -R u+w "$ANDROID_SDK_ROOT" 2>/dev/null || true
-              
-              # Create necessary directories
+
+              # Remove nix-copied licenses dir (may be immutable) and recreate fresh
+              rm -rf "$ANDROID_SDK_ROOT/licenses" 2>/dev/null || true
               mkdir -p "$ANDROID_SDK_ROOT/licenses"
               mkdir -p "$ANDROID_SDK_ROOT/platforms"
               mkdir -p "$ANDROID_SDK_ROOT/build-tools"
               mkdir -p "$ANDROID_SDK_ROOT/ndk"
-              
+
               # Accept licenses
               echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
               echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
@@ -106,6 +110,13 @@
 
             # Platform-specific setup
             if [[ "$OSTYPE" == "darwin"* ]]; then
+              # Nix transitive deps (e.g. nim → apple-sdk) set SDKROOT/DEVELOPER_DIR
+              # to the Nix SDK and put a broken xcrun wrapper in PATH, unset these
+              # and prepend /usr/bin so system Xcode tools take priority.
+              unset DEVELOPER_DIR SDKROOT
+              unset NIX_CFLAGS_COMPILE NIX_ENFORCE_NO_NATIVE
+              unset NIX_IGNORE_LD_THROUGH_GCC NIX_DONT_SET_RPATH NIX_DONT_SET_RPATH_FOR_BUILD NIX_NO_SELF_RPATH
+              export PATH="/usr/bin:$PATH"
               echo "  • macOS: iOS and Android development available"
               echo "  • CocoaPods: $(pod --version 2>/dev/null || echo 'not available')"
             else

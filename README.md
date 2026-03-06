@@ -1,6 +1,6 @@
-# React Native + Nim Integration
+# React Native + Nim
 
-**Template with automatic binding generation for Nim → React Native**
+**Automatic binding generation for Nim business logic in React Native apps**
 
 <div align="center">
 
@@ -10,230 +10,216 @@
 
 </div>
 
-A template for integrating Nim business logic into React Native apps with **automatic binding generation** 
-inspired by go-mobile and the status-go/status-mobile architecture.
-
-## Features
-
-- **Automatic Binding Generation** - Write Nim, get React Native bindings automatically
-- **Cross-Platform** - Works on iOS and Android  
-- **Type Safe** - Full TypeScript support with auto-generated types
-- **Zero Manual Work** - No hand-written bridge code needed
-- **Monorepo Structure** - Organized like status-go/status-mobile
-- **Modern Tooling** - React Native 0.76.9, Expo SDK 52, Nim 2.2.0
-
-## Architecture Overview
-
-This project demonstrates a **separation of concerns** between business logic (Nim) and UI (React Native), 
-similar to how status-go provides backend services to status-mobile.
-
-```
-react-native-nim/
-├── nim-core/               #  Business Logic (Nim)
-├── bindings/               #  Generated C Bindings  
-├── mobile-app/             #  React Native App with Auto-Generation
-│   ├── nim/                #  Nim source code
-│   ├── tools/              #  Automatic binding generator
-│   └── modules/nim-bridge/ # Generated bridge code
-├── tools/                  # ️ Build Automation
-```
+Write your business logic in Nim, get React Native bindings automatically. Inspired by go-mobile and status-go/status-mobile.
 
 ## Quick Start
 
-### Prerequisites
-
-#### Option 1: Using Nix (Recommended)
-
-This project includes a Nix flake that provides all required development tools.
+### Create a new project
 
 ```bash
-# Install Nix if you haven't already
-curl -L https://nixos.org/nix/install | sh
-
-# Enter the development environment
-nix develop
-
+npx create-react-native-nim my-app
 ```
 
-The Nix environment includes:
-- Node.js 20
-- Python 3
-- Nim compiler 2.2+
-- Git and build tools
-- Android SDK (in default shell)
-- All required dependencies
-
-**Tip:** For automatic environment loading, install [direnv](https://direnv.net/):
-```bash
-# Install direnv
-brew install direnv  # macOS
-# or: nix-env -iA nixpkgs.direnv
-
-# Allow direnv for this project
-direnv allow
-
-# Now the environment loads automatically when you cd into the project!
-```
-
-#### Option 2: Manual Installation
-
-- **Node.js**  18+ 
-- **Nim**      2.0+ (`brew install nim` on macOS)
-- **Xcode**    (for iOS development)
-- **Python 3** (for binding generator)
-
-### Installation
+Or clone and run the CLI locally:
 
 ```bash
-# Clone the repository
 git clone https://github.com/siddarthkay/react-native-nim.git
 cd react-native-nim
-
-# Go to the mobile app
-cd mobile-app
-
-# Install dependencies
-yarn install
-
-# Install iOS dependencies
-cd ios && pod install && cd ..
-
-# Build Nim bindings
-yarn build:nim
-
-# Run on iOS
-yarn ios
-
-# Run on Android
-yarn android
+node cli/bin/create-react-native-nim.js my-app
 ```
+
+Then follow the printed steps:
+
+```bash
+cd my-app
+yarn install
+make build-nim        # Compile Nim + generate all bridge code
+yarn ios              # or yarn android
+```
+
+### Prerequisites
+
+- **Node.js** 18+
+- **Nim** 2.0+ (`brew install nim` on macOS)
+- **Python 3** (for binding generator)
+- **Xcode** (iOS) / **Android SDK** (Android)
+
+Or use the included Nix flake for a reproducible environment:
+
+```bash
+nix develop
+```
+
+## Development (Demo App)
+
+The demo app in `mobile-app/` uses Makefiles for all build operations:
+
+```bash
+nix develop                        # Enter reproducible dev environment (optional)
+make setup                         # Install Node dependencies
+make ios                           # Build Nim backend + iOS app
+make android                       # Build Nim backend + Android app
+make help                          # Show all available targets
+```
+
+### Make Targets
+
+| Target | Description |
+|--------|-------------|
+| `make setup` | Install Node dependencies |
+| `make ios` | Build Nim + iOS app (full pipeline) |
+| `make android` | Build Nim + Android app (full pipeline) |
+| `make clean` | Clean all build artifacts |
+| `make clean-all` | Clean everything including Nim caches |
+
+Sub-project targets (run from `mobile-app/`):
+
+| Target | Description |
+|--------|-------------|
+| `make build-nim` | Compile Nim + static lib + bindings + headers |
+| `make nim-compile` | Compile Nim to C files only |
+| `make nim-static-lib` | Compile C files into static library |
+| `make nim-bindings` | Generate TypeScript/iOS/Android bridge code |
+| `make build-ios` | Full iOS build pipeline |
+| `make build-android` | Full Android build pipeline |
+| `make run-ios` | Dev build + deploy to iOS Simulator |
+| `make run-android` | Dev build + deploy to Android emulator |
+| `make clean-nim` | Clean Nim build artifacts |
+| `make help` | Show all targets |
 
 ## How It Works
 
-### 1. Write Nim Functions
+```
+Nim Source Code          Auto Generator          React Native App
+(Business Logic)   -->  (Python Script)    -->  (TypeScript/UI)
+   {.exportc.}          iOS + Android + TS       Type-safe calls
+```
 
-Create your business logic in `mobile-app/nim/nimbridge.nim`:
+### 1. Write Nim functions
+
+Add exported functions in `nim/nimbridge.nim`:
 
 ```nim
-# mobile-app/nim/nimbridge.nim
 proc calculateTax*(income: cint, rate: cint): cint {.exportc.} =
   return (income * rate) div 100
 
-proc validateCreditCard*(cardNumber: cstring): cint {.exportc.} =
-  # Your validation logic here
-  if len($cardNumber) == 16: return 1
-  return 0
+proc greet*(name: cstring): cstring {.exportc.} =
+  ## @allocated
+  return allocCString("Hello, " & $name & "!")
 ```
 
-### 2. Generate Bindings Automatically
+### 2. Generate bindings
 
 ```bash
-cd mobile-app
-yarn build:nim
+make build-nim          # from mobile-app/ or scaffolded projects
 ```
 
-This **automatically generates**:
-- **C++ wrapper** (`modules/nim-bridge/ios/nim_functions.h`)
-- **Objective-C++ bridge** (`modules/nim-bridge/ios/NimBridge.mm`) 
-- **TypeScript interfaces** (`modules/nim-bridge/src/NimBridge.types.ts`)
+This automatically generates:
+- **iOS**: C++ wrapper + Objective-C++ bridge + static library
+- **Android**: JNI bridge + Kotlin TurboModule + CMake config
+- **TypeScript**: TurboModule spec with full type safety
 
 ### 3. Use in React Native
 
 ```typescript
 import { NimCore } from './modules/nim-bridge/src/index';
 
-// Type-safe calls to your Nim functions
-const tax = NimCore.calculateTax(50000, 20); // Returns 10000
-const isValid = NimCore.validateCreditCard("1234567890123456"); // Returns true
+const tax = NimCore.calculateTax(50000, 20);
+const greeting = NimCore.greet("World");
 ```
 
-### Supported Types
+## Supported Types
 
-| Nim Type | TypeScript Type | Notes |
-|----------|----------------|-------|
+| Nim Type | TypeScript | Notes |
+|----------|-----------|-------|
 | `cint` | `number` | 32-bit integer |
+| `int64` | `number` | 64-bit integer |
 | `cstring` | `string` | C-compatible string |
-| `bool` → `cint` | `boolean` | 0/1 conversion |
+| `bool` / `cint` | `boolean` | Use `boolean_returns` in config |
+| `float` | `number` | Double precision |
 
-## Demo App
-
-The included demo app showcases:
-
-- **Math Operations** (Fibonacci, Prime checking, Factorization)
-- **Data Validation** (Email validation, User creation)
-- **System Info** (Version reporting)
-- **Error Handling** (Graceful error management)
-
-### **Architecture**
+## Project Structure
 
 ```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Nim Source    │───▶│  Auto Generator  │───▶│  React Native   │
-│ (Business Logic)│    │  (Python Script) │    │      (UI)       │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
+react-native-nim/
+├── Makefile                 # Root orchestration (make ios, make android)
+├── mobile-app/              # Demo app
+│   ├── Makefile             # Build targets (build-nim, build-ios, etc.)
+│   ├── nim/                 # Nim business logic
+│   │   ├── nimbridge.nim    # Exported functions ({.exportc.})
+│   │   └── nimbridge.nimble # Nim dependencies
+│   ├── modules/nim-bridge/  # Auto-generated bridge code
+│   │   ├── src/             # TypeScript TurboModule spec
+│   │   ├── ios/             # Objective-C++ bridge + static lib
+│   │   └── android/         # Kotlin module + JNI bridge
+│   ├── src/App.tsx          # React Native app (retro terminal UI)
+│   └── tools/
+│       ├── generator_config.json  # Binding generator config
+│       └── bindings/        # Python generator package
+├── templates/default/       # CLI project template
+├── cli/                     # create-react-native-nim CLI tool
+└── flake.nix                # Nix development environment
 ```
 
-1. **Nim Layer**: Pure business logic with `{.exportc.}` pragma
-2. **Generator Layer**: Automatic C++/ObjC/TypeScript bridge generation  
-3. **React Native Layer**: Type-safe consumption of Nim functions
+## Templates
 
-### Type Mapping
+The CLI supports a `--template` flag for selecting different project templates:
 
-The binding generator automatically maps types:
+```bash
+npx create-react-native-nim my-app --template default
+```
 
-```python
-# mobile-app/tools/generate_bindings.py
-def nim_to_ts_type(nim_type):
-    type_map = {
-        'cstring': 'string',
-        'cint': 'number',
-        'bool': 'boolean',
-    }
-    return type_map.get(nim_type, 'any')
+Currently available: `default` (React Native 0.81.4 + Expo 54 + Nim 2.0+).
+
+Future templates will support different version combinations of Nim and React Native.
+
+## Configuration
+
+Customize binding generation in `tools/generator_config.json`:
+
+```json
+{
+  "function_name_mappings": {
+    "myNimFunc": "myJsName"
+  },
+  "boolean_returns": ["myNimFunc"],
+  "type_mappings": { ... }
+}
 ```
 
 ## Troubleshooting
 
-### Common Issues
-
 **Build fails with "Symbol not found"**
 ```bash
-# Clean and rebuild
-cd mobile-app
-rm -rf nim/cache
-yarn build:nim
-cd ios && pod install && cd ..
+make clean-nim          # from mobile-app/
+make build-nim
+make pod-install
 ```
 
 **Metro bundler errors**
 ```bash
-# Reset Metro cache
 yarn react-native start --reset-cache
 ```
 
-**Nim compilation errors**
+**Nim not found**
 ```bash
-# Check Nim version
 nim --version  # Should be 2.0+
+brew install nim  # macOS
+# or use: nix develop
 ```
+
+## Architecture
+
+- **TurboModules / JSI** - React Native New Architecture
+- **Static library** (iOS) / **Shared library** (Android) - compiled from Nim
+- **Automatic code generation** - no manual bridge code
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT - see [LICENSE](LICENSE).
 
 ## Inspiration
 
-Inspired by:
 - [go-mobile](https://pkg.go.dev/golang.org/x/mobile) - Go bindings for mobile
-- [status-mobile](https://github.com/status-im/status-mobile) - Real-world Clojure/Go integration
-- React Native's philosophy of "learn once, write anywhere"
-
-## Learn More
-
-- [Nim Language](https://nim-lang.org/) - Efficient, expressive, elegant
-- [React Native](https://reactnative.dev/) - Learn once, write anywhere
-- [Expo](https://expo.dev/) - Platform for universal React applications
-
----
-
-*Questions? Open an issue or join the discussion!*
+- [status-mobile](https://github.com/status-im/status-mobile) - Real-world Go/mobile integration
+- [Nim](https://nim-lang.org/) | [React Native](https://reactnative.dev/) | [Expo](https://expo.dev/)

@@ -9,11 +9,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build:nim": "./tools/build-mobile.sh",
-    "generate:bindings": "python3 ./tools/generate_bindings.py",
-    "build:android": "./tools/build-mobile.sh android",
-    "build:ios": "./tools/build-mobile.sh ios",
-    "prebuild": "yarn run build:nim"
+    "build:nim": "make build-nim",
+    "generate:bindings": "python3 ./tools/generate_bindings.py"
   },
   "dependencies": {
     "@types/react": "~18.3.12",

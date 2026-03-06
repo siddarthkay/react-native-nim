@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+
+# Native
+ios/
+android/
+
+# Nim build artifacts
+nim/cache_ios_sim/
+nim/cache_android/
+nim/libnim_core.a
+modules/nim-bridge/ios/libnim_core.a
+modules/nim-bridge/ios/main.h
+modules/nim-bridge/ios/nimbase.h
+modules/nim-bridge/android/src/main/jniLibs/
+modules/nim-bridge/android/build/
+modules/nim-bridge/android/.cxx/
+
+# OS
+.DS_Store
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Metro
+.metro-health-check*
