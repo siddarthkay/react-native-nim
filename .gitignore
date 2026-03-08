@@ -66,5 +66,5 @@ bindings/ios/nimcache/
 tmp/
 temp/
 
-# CLI templates (bundled during npm publish via prepublishOnly)
-cli/templates/
+# CLI template (bundled during npm publish via prepublishOnly)
+cli/template/

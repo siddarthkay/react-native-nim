@@ -156,22 +156,9 @@ react-native-nim/
 │   └── tools/
 │       ├── generator_config.json  # Binding generator config
 │       └── bindings/        # Python generator package
-├── templates/default/       # CLI project template
 ├── cli/                     # create-react-native-nim CLI tool
 └── flake.nix                # Nix development environment
 ```
-
-## Templates
-
-The CLI supports a `--template` flag for selecting different project templates:
-
-```bash
-npx create-react-native-nim my-app --template default
-```
-
-Currently available: `default` (React Native 0.81.4 + Expo 54 + Nim 2.0+).
-
-Future templates will support different version combinations of Nim and React Native.
 
 ## Configuration
 

@@ -8,7 +8,8 @@
   "files": [
     "bin/",
     "src/",
-    "templates/"
+    "template/",
+    "README.md"
   ],
   "scripts": {
     "prepublishOnly": "./build-template.sh"

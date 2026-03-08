@@ -5,10 +5,6 @@ node_modules/
 .expo/
 dist/
 
-# Native
-ios/
-android/
-
 # Nim build artifacts
 nim/cache_ios_sim/
 nim/cache_android/

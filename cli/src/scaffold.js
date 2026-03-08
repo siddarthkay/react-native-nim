@@ -1,8 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const SKIP_DIRS = ['node_modules', '.yarn', '.git', 'cache_ios_sim', 'cache_android', 'build', '.cxx', 'dist', '__pycache__', '.kotlin'];
-const SKIP_FILES = ['.DS_Store', 'yarn.lock'];
+const SKIP_DIRS = ['node_modules', '.yarn', '.git', 'cache_ios_sim', 'cache_android', 'build', '.cxx', 'dist', '__pycache__', '.kotlin', 'Pods', '.gradle', '.expo', 'jniLibs'];
+const SKIP_FILES = ['.DS_Store', 'yarn.lock', 'Podfile.lock', 'nimbase.h', 'main.h', 'nim_core', 'nim_core.h', 'nim_core.json'];
+const SKIP_EXTS = ['.log', '.o', '.a'];
 
 function isBinaryFile(filePath) {
   const buf = Buffer.alloc(8192);
@@ -36,11 +37,13 @@ function scaffold(config) {
 
   // Directory name replacements (template dir name → target dir name)
   const dirReplacements = {
-    '{{APP_NAME}}': appName,
-    '{{BUNDLE_PATH}}': bundlePath,
+    'nimrnmobileapp': appName,
   };
 
-  copyDir(templateDir, targetDir, replacements, dirReplacements);
+  // Bundle path: replace original io/reactnativenim/app with new bundle path
+  const originalBundlePath = 'io/reactnativenim/app';
+
+  copyDir(templateDir, targetDir, replacements, dirReplacements, originalBundlePath, bundlePath);
 
   // Make shell scripts and gradlew executable
   makeExecutable(targetDir);
@@ -48,13 +51,15 @@ function scaffold(config) {
   console.log(`  Created ${countFiles(targetDir)} files.`);
 }
 
-function copyDir(src, dest, replacements, dirReplacements) {
+function copyDir(src, dest, replacements, dirReplacements, originalBundlePath, newBundlePath, relPath) {
+  relPath = relPath || '';
   fs.mkdirSync(dest, { recursive: true });
 
   const entries = fs.readdirSync(src, { withFileTypes: true });
 
   for (const entry of entries) {
     const srcPath = path.join(src, entry.name);
+    const entryRelPath = relPath ? relPath + '/' + entry.name : entry.name;
 
     // Apply directory name replacements
     let destName = entry.name;
@@ -65,16 +70,36 @@ function copyDir(src, dest, replacements, dirReplacements) {
     if (entry.isDirectory()) {
       if (SKIP_DIRS.includes(entry.name)) continue;
 
-      // For {{BUNDLE_PATH}}, the replacement contains '/' so we need to create nested dirs
+      // Check if this directory starts the original bundle path
+      // e.g., we're at java/io and originalBundlePath starts with io/...
+      if (originalBundlePath && isBundlePathRoot(srcPath, originalBundlePath)) {
+        // Copy contents of the original bundle path dir into the new bundle path dir
+        const origFullPath = path.join(srcPath, ...originalBundlePath.split('/').slice(1));
+        const newFullPath = path.join(dest, newBundlePath);
+        if (fs.existsSync(origFullPath)) {
+          copyDir(origFullPath, newFullPath, replacements, dirReplacements, null, null, entryRelPath + '/' + originalBundlePath.split('/').slice(1).join('/'));
+        }
+        continue;
+      }
+
       const destPath = path.join(dest, destName);
-      copyDir(srcPath, destPath, replacements, dirReplacements);
+      copyDir(srcPath, destPath, replacements, dirReplacements, originalBundlePath, newBundlePath, entryRelPath);
     } else {
       if (SKIP_FILES.includes(entry.name)) continue;
+      if (SKIP_EXTS.some(ext => entry.name.endsWith(ext))) continue;
 
       const destPath = path.join(dest, destName);
       copyFile(srcPath, destPath, replacements);
     }
   }
+}
+
+function isBundlePathRoot(dirPath, originalBundlePath) {
+  // Check if dirPath contains the first segment and the full original bundle path exists under it
+  const segments = originalBundlePath.split('/');
+  if (path.basename(dirPath) !== segments[0]) return false;
+  const fullPath = path.join(dirPath, ...segments.slice(1));
+  return fs.existsSync(fullPath);
 }
 
 function copyFile(src, dest, replacements) {

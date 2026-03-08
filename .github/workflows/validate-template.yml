@@ -5,12 +5,12 @@ on:
     branches: [master]
     paths:
       - 'cli/**'
-      - 'templates/**'
+      - 'mobile-app/**'
   pull_request:
     branches: [master]
     paths:
       - 'cli/**'
-      - 'templates/**'
+      - 'mobile-app/**'
   workflow_dispatch:
 
 jobs:

@@ -31,8 +31,6 @@ function parseArgs(args) {
 
 async function main() {
   const { positional, flags } = parseArgs(process.argv.slice(2));
-  const templateName = flags.template || 'default';
-
   console.log('\n  create-react-native-nim\n');
   console.log('  Scaffold a React Native app with Nim business logic\n');
 
@@ -63,7 +61,7 @@ async function main() {
   }
 
   // Resolve template
-  const templateDir = resolveTemplateDir(templateName);
+  const templateDir = resolveTemplateDir();
   const targetDir = path.resolve(process.cwd(), projectDir);
 
   if (fs.existsSync(targetDir)) {
@@ -91,33 +89,20 @@ async function main() {
   }
 }
 
-function resolveTemplateDir(templateName) {
+function resolveTemplateDir() {
   // When running from the repo (development)
-  const repoTemplate = path.resolve(__dirname, '../../templates', templateName);
+  const repoTemplate = path.resolve(__dirname, '../../mobile-app');
   if (fs.existsSync(repoTemplate)) {
     return repoTemplate;
   }
 
-  // When installed as npm package, templates are bundled
-  const pkgTemplate = path.resolve(__dirname, '../templates', templateName);
+  // When installed as npm package, template is bundled via build-template.sh
+  const pkgTemplate = path.resolve(__dirname, '../template');
   if (fs.existsSync(pkgTemplate)) {
     return pkgTemplate;
   }
 
-  // List available templates
-  const repoTemplatesDir = path.resolve(__dirname, '../../templates');
-  const pkgTemplatesDir = path.resolve(__dirname, '../templates');
-  const templatesDir = fs.existsSync(repoTemplatesDir) ? repoTemplatesDir : pkgTemplatesDir;
-
-  if (fs.existsSync(templatesDir)) {
-    const available = fs.readdirSync(templatesDir, { withFileTypes: true })
-      .filter(d => d.isDirectory())
-      .map(d => d.name);
-    console.error(`  Template "${templateName}" not found.`);
-    console.error(`  Available templates: ${available.join(', ')}`);
-  } else {
-    console.error('  Could not find templates directory.');
-  }
+  console.error('  Could not find template directory.');
   process.exit(1);
 }
 

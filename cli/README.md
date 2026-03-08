@@ -49,7 +49,6 @@ Or use the included Nix flake: `nix develop`
 | Flag | Description | Example |
 |------|-------------|---------|
 | `--bundleId` | App bundle identifier | `com.mycompany.myapp` |
-| `--template` | Template to use | `default` |
 
 The first positional argument is the app name (e.g. `my-app`).
 

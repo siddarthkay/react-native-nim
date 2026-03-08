@@ -23,7 +23,7 @@ proc addNumbers*(a: cint, b: cint): cint {.exportc.} =
 
 proc getSystemInfo*(): cstring {.exportc.} =
   ## @allocated
-  let info = fmt"Nim {NimVersion} on iOS (arm64)"
+  let info = fmt"Nim {NimVersion} on {hostOS} ({hostCPU})"
   return allocCString(info)
 
 proc mobileFibonacci*(n: cint): int64 {.exportc.} =
