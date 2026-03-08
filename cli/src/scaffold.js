@@ -1,16 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
-const PLACEHOLDER_EXTENSIONS = [
-  '.json', '.ts', '.tsx', '.js', '.jsx', '.nim', '.nimble',
-  '.py', '.sh', '.mm', '.h', '.cpp', '.kt', '.java', '.txt', '.cfg', '.md',
-  '.pbxproj', '.plist', '.xcworkspacedata', '.xcscheme', '.storyboard',
-  '.entitlements', '.xcprivacy', '.xml', '.gradle', '.properties', '.bat',
-  '.podspec',
-];
-
 const SKIP_DIRS = ['node_modules', '.yarn', '.git', 'cache_ios_sim', 'cache_android', 'build', '.cxx', 'dist', '__pycache__', '.kotlin'];
 const SKIP_FILES = ['.DS_Store', 'yarn.lock'];
+
+function isBinaryFile(filePath) {
+  const buf = Buffer.alloc(8192);
+  const fd = fs.openSync(filePath, 'r');
+  try {
+    const bytesRead = fs.readSync(fd, buf, 0, 8192, 0);
+    for (let i = 0; i < bytesRead; i++) {
+      if (buf[i] === 0) return true;
+    }
+    return false;
+  } finally {
+    fs.closeSync(fd);
+  }
+}
 
 function scaffold(config) {
   const { templateDir, targetDir, appName, slug, bundleId } = config;
@@ -72,7 +78,6 @@ function copyDir(src, dest, replacements, dirReplacements) {
 }
 
 function copyFile(src, dest, replacements) {
-  const ext = path.extname(src).toLowerCase();
   const basename = path.basename(src);
 
   // Rename gitignore -> .gitignore (npm strips .gitignore from packages)
@@ -83,17 +88,15 @@ function copyFile(src, dest, replacements) {
   // Ensure parent directory exists (for nested bundle path dirs)
   fs.mkdirSync(path.dirname(dest), { recursive: true });
 
-  const textBasenames = ['gitignore', '.envrc', 'Podfile', 'gradlew', 'proguard-rules.pro', '.xcode.env', 'Makefile'];
-  if (PLACEHOLDER_EXTENSIONS.includes(ext) || textBasenames.includes(basename)) {
+  if (isBinaryFile(src)) {
+    fs.copyFileSync(src, dest);
+  } else {
     // Text file: replace placeholders
     let content = fs.readFileSync(src, 'utf-8');
     for (const [placeholder, value] of Object.entries(replacements)) {
       content = content.replaceAll(placeholder, value);
     }
     fs.writeFileSync(dest, content, 'utf-8');
-  } else {
-    // Binary file: copy as-is
-    fs.copyFileSync(src, dest);
   }
 }
 

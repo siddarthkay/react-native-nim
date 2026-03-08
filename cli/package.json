@@ -1,6 +1,6 @@
 {
   "name": "create-react-native-nim",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Scaffold a React Native app with Nim business logic integration",
   "bin": {
     "create-react-native-nim": "./bin/create-react-native-nim.js"
@@ -11,7 +11,7 @@
     "templates/"
   ],
   "scripts": {
-    "prepublishOnly": "rm -rf templates && cp -R ../templates ."
+    "prepublishOnly": "./build-template.sh"
   },
   "keywords": [
     "react-native",

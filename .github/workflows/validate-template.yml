@@ -35,9 +35,25 @@ jobs:
           YARN_ENABLE_HARDENED_MODE: '0'
           YARN_ENABLE_IMMUTABLE_INSTALLS: 'false'
         run: |
-          echo "" | node cli/bin/create-react-native-nim.js test-app
+          node cli/bin/create-react-native-nim.js test-app --bundleId com.testcompany.testapp
           cd test-app
           corepack use yarn@4.9.4
+
+      - name: Verify template replacements
+        run: |
+          echo "Checking for leftover template identifiers..."
+          FAIL=0
+          for pattern in "nimrnmobileapp" "nim-rn-mobile-app" "io.reactnativenim.app" "{{APP_NAME}}" "{{APP_SLUG}}" "{{BUNDLE_ID}}" "{{BUNDLE_PATH}}"; do
+            if grep -r "$pattern" test-app/ --include="*.ts" --include="*.tsx" --include="*.js" --include="*.json" --include="*.nim" --include="*.kt" --include="*.swift" --include="*.gradle" --include="*.pbxproj" --include="*.plist" --include="*.xml" --include="*.podspec" --include="*.mm" --include="*.h" --include="*.py" -l 2>/dev/null; then
+              echo "FAIL: Found leftover '$pattern' in the above files"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            echo "Template replacement verification failed!"
+            exit 1
+          fi
+          echo "All template identifiers replaced successfully."
 
       - name: Init git repo (required by nimble)
         working-directory: test-app
@@ -98,9 +114,25 @@ jobs:
           YARN_ENABLE_HARDENED_MODE: '0'
           YARN_ENABLE_IMMUTABLE_INSTALLS: 'false'
         run: |
-          echo "" | node cli/bin/create-react-native-nim.js test-app
+          node cli/bin/create-react-native-nim.js test-app --bundleId com.testcompany.testapp
           cd test-app
           corepack use yarn@4.9.4
+
+      - name: Verify template replacements
+        run: |
+          echo "Checking for leftover template identifiers..."
+          FAIL=0
+          for pattern in "nimrnmobileapp" "nim-rn-mobile-app" "io.reactnativenim.app" "{{APP_NAME}}" "{{APP_SLUG}}" "{{BUNDLE_ID}}" "{{BUNDLE_PATH}}"; do
+            if grep -r "$pattern" test-app/ --include="*.ts" --include="*.tsx" --include="*.js" --include="*.json" --include="*.nim" --include="*.kt" --include="*.swift" --include="*.gradle" --include="*.pbxproj" --include="*.plist" --include="*.xml" --include="*.podspec" --include="*.mm" --include="*.h" --include="*.py" -l 2>/dev/null; then
+              echo "FAIL: Found leftover '$pattern' in the above files"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            echo "Template replacement verification failed!"
+            exit 1
+          fi
+          echo "All template identifiers replaced successfully."
 
       - name: Init git repo (required by nimble)
         working-directory: test-app

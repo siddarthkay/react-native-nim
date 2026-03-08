@@ -55,7 +55,12 @@ async function main() {
   console.log(`\n  App name:  ${appName}`);
   console.log(`  Slug:      ${slug}\n`);
 
-  const bundleId = (await prompt(`Bundle identifier (${defaultBundleId}): `)) || defaultBundleId;
+  let bundleId;
+  if (flags.bundleId) {
+    bundleId = flags.bundleId;
+  } else {
+    bundleId = (await prompt(`Bundle identifier (${defaultBundleId}): `)) || defaultBundleId;
+  }
 
   // Resolve template
   const templateDir = resolveTemplateDir(templateName);
