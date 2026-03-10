@@ -39,8 +39,13 @@ android/key.store
 # Generated bindings
 bindings/android/*.cpp
 bindings/android/*.h
+bindings/android/nim_core
+bindings/android/nim_core.json
 bindings/ios/*.cpp
 bindings/ios/*.h
+bindings/ios/nim_core
+bindings/ios/nim_core.json
+bindings/headers/nim_core.h
 bindings/android/nimcache/
 bindings/ios/nimcache/
 

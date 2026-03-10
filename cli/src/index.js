@@ -2,6 +2,7 @@ const { prompt } = require('./prompts.js');
 const { scaffold } = require('./scaffold.js');
 const path = require('path');
 const fs = require('fs');
+const { execSync } = require('child_process');
 
 function toPascalCase(str) {
   return str
@@ -60,6 +61,11 @@ async function main() {
     bundleId = (await prompt(`Bundle identifier (${defaultBundleId}): `)) || defaultBundleId;
   }
 
+  if (!validateBundleId(bundleId)) {
+    console.error('  Invalid bundle ID. Use lowercase reverse-domain format: com.company.appname');
+    process.exit(1);
+  }
+
   // Resolve template
   const templateDir = resolveTemplateDir();
   const targetDir = path.resolve(process.cwd(), projectDir);
@@ -82,10 +88,29 @@ async function main() {
 
   try {
     scaffold(config);
+    initGitRepo(targetDir);
     printNextSteps(projectDir);
   } catch (err) {
     console.error(`\n  Error: ${err.message}`);
     process.exit(1);
+  }
+}
+
+function validateBundleId(id) {
+  return /^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)+$/.test(id);
+}
+
+function initGitRepo(targetDir) {
+  try {
+    execSync('git init', { cwd: targetDir, stdio: 'ignore' });
+    execSync('git add -A', { cwd: targetDir, stdio: 'ignore' });
+    execSync('git commit -m "Initial commit from create-react-native-nim"', {
+      cwd: targetDir,
+      stdio: 'ignore',
+    });
+    console.log('  Initialized git repository.\n');
+  } catch {
+    // git not available — not critical, but nimble will need it later
   }
 }
 
