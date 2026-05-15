@@ -53,6 +53,20 @@ target 'nimrnmobileapp' do
       :ccache_enabled => podfile_properties['apple.ccacheEnabled'] == 'true',
     )
 
+    # fmt 11.0.2 (bundled with RN 0.81) emits FMT_STRING("...") lambdas
+    # that Xcode 26's clang rejects as not constant-evaluable. Strip the
+    # wrapper so the literal goes through the plain consteval ctor path.
+    # Remove when bumping to RN 0.82 (ships fmt prebuilt).
+    fmt_inl = File.join(installer.sandbox.root, 'fmt/include/fmt/format-inl.h')
+    if File.exist?(fmt_inl)
+      content = File.read(fmt_inl)
+      patched = content.gsub(/FMT_STRING\(("[^"]*")\)/, '\1')
+      if patched != content
+        File.chmod(0644, fmt_inl)
+        File.write(fmt_inl, patched)
+      end
+    end
+
     # fix for Xcode 16 build issues
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|

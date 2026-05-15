@@ -10,7 +10,7 @@ on:
 jobs:
   build-ios:
     name: Build iOS Simulator App
-    runs-on: macos-15
+    runs-on: bladerunner-macos 
 
     steps:
       - name: Checkout repository
@@ -30,15 +30,6 @@ jobs:
         run: |
           brew install nim
           echo "$HOME/.nimble/bin" >> $GITHUB_PATH
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
-          working-directory: mobile-app/ios
-
-      - name: Select Xcode 16.4
-        run: sudo xcode-select -s "/Applications/Xcode_16.4.app/Contents/Developer"
 
       - name: Build iOS
         working-directory: mobile-app

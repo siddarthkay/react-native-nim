@@ -121,6 +121,8 @@ build-nim: nim-static-lib nim-bindings nim-headers
 build-ios: install build-nim codegen pod-install
 	@echo "Building iOS Simulator app..."
 	@set -o pipefail && env -i HOME=$(HOME) PATH=/usr/bin:/bin:/usr/sbin:/sbin LANG=en_US.UTF-8 \
+		DEVELOPER_DIR="$$DEVELOPER_DIR" \
+		TMPDIR="$$TMPDIR" \
 		xcodebuild -workspace $(XCODE_WORKSPACE) \
 		-scheme $(XCODE_SCHEME) \
 		-sdk iphonesimulator \

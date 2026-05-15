@@ -91,7 +91,7 @@ jobs:
 
   scaffold-and-build-ios:
     name: Template → iOS Build
-    runs-on: macos-15
+    runs-on: bladerunner-macos
 
     steps:
       - name: Checkout repository
@@ -139,15 +139,6 @@ jobs:
         run: |
           brew install nim
           echo "$HOME/.nimble/bin" >> $GITHUB_PATH
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
-          working-directory: test-app/ios
-
-      - name: Select Xcode 16.4
-        run: sudo xcode-select -s "/Applications/Xcode_16.4.app/Contents/Developer"
 
       - name: Build iOS
         working-directory: test-app

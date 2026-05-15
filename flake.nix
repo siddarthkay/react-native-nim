@@ -113,10 +113,15 @@
               # Nix transitive deps (e.g. nim → apple-sdk) set SDKROOT/DEVELOPER_DIR
               # to the Nix SDK and put a broken xcrun wrapper in PATH, unset these
               # and prepend /usr/bin so system Xcode tools take priority.
-              unset DEVELOPER_DIR SDKROOT
+              unset SDKROOT
               unset NIX_CFLAGS_COMPILE NIX_ENFORCE_NO_NATIVE
               unset NIX_IGNORE_LD_THROUGH_GCC NIX_DONT_SET_RPATH NIX_DONT_SET_RPATH_FOR_BUILD NIX_NO_SELF_RPATH
               export PATH="/usr/bin:$PATH"
+              if [ -d /Applications/Xcode.app/Contents/Developer ]; then
+                export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+              else
+                unset DEVELOPER_DIR
+              fi
               echo "  • macOS: iOS and Android development available"
               echo "  • CocoaPods: $(pod --version 2>/dev/null || echo 'not available')"
             else
