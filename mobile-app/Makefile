@@ -53,7 +53,7 @@ pod-install:
 codegen:
 	@echo "Generating React Native codegen artifacts..."
 	@RCT_NEW_ARCH_ENABLED=1 node node_modules/react-native/scripts/generate-codegen-artifacts.js \
-		--path . --targetPlatform ios --outputPath ios/build/generated/ios
+		--path . --targetPlatform ios --outputPath ios
 	@echo "✓ Codegen complete"
 
 # --- Nim build pipeline ---
